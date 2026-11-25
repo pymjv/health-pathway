@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Management - Health Pathway Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.admin-main{padding:40px;overflow-y:auto}
+.page-header{margin-bottom:32px}
+.page-header h1{font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px}
+.page-header p{color:var(--misted);margin:0}
+.tab-btn{background:transparent;border:none;padding:10px 20px;border-radius:8px;font-weight:600;color:var(--text-soft);cursor:pointer;border:1px solid var(--border);margin-right:8px;margin-bottom:8px}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:24px}
+.card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 16px 0;color:var(--text)}
+.table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.table th, .table td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left}
+.table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.4px}
+.table tr:hover td{background:rgba(14,165,164,0.03)}
+.btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
+.btn-sm.primary{background:var(--primary);color:#fff}
+.btn-sm.secondary{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+.btn-sm.danger{background:#fee2e2;color:#dc2626}
+.btn-add{background:var(--primary);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;border:none;cursor:pointer;margin-bottom:16px}
+.btn-add:hover{background:var(--primary-hover)}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.form-row input,.form-row select,.form-row textarea{padding:10px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text);flex:1}
+.form-row textarea{min-height:60px;resize:vertical}
+.save-cancel{display:flex;gap:10px;margin-top:12px}
+.edit-form{background:var(--border);border-radius:10px;padding:16px;margin-top:16px}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.price-item{border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--card)}
+.price-item .test-name{font-weight:600;color:var(--text);margin-bottom:6px;display:block}
+.price-item input{width:100%;padding:8px;border:1px solid var(--border);border-radius:6px}
+.empty-state{text-align:center;padding:40px 24px;color:var(--misted)}
+.empty-state b{color:var(--text)}
+.tabs{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="logo" aria-label="Health Pathway">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<div class="header-actions" style="display:flex;align-items:center;gap:12px">
+<a href="admin-dashboard.html" class="btn ghost" style="margin-right:8px">Dashboard</a>
+<span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</div>
+</header>
+
+<main class="admin-main">
+<div class="page-header">
+<h1>Data Management</h1>
+<p>Manage hospitals, diseases, and medical tests.</p>
+</div>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="openTab('hospitals')">Hospitals</button>
+<button class="tab-btn" onclick="openTab('diseases')">Diseases</button>
+<button class="tab-btn" onclick="openTab('tests')">Medical Tests</button>
+<button class="tab-btn" onclick="openTab('prices')">Hospital Test Prices</button>
+</div>
+
+<div id="tab-hospitals" class="tab-content active">
+<div class="card-section">
+<h3>Hospital Management</h3>
+<button class="btn-add" onclick="showAddHospitalForm()">+ Add Hospital</button>
+<div id="addHospitalForm" style="display:none" class="edit-form">
+<div class="form-row">
+<input type="text" id="hName" placeholder="Hospital Name">
+<input type="text" id="hAddr" placeholder="Address">
+</div>
+<div class="form-row">
+<input type="text" id="hER" placeholder="ER Contact">
+<input type="text" id="hLand" placeholder="Landline">
+<label style="align-self:flex-end"><input type="checkbox" id="hAvail" checked> Available</label>
+</div>
+<div class="save-cancel">
+<button class="btn-sm primary" onclick="saveHospital()">Save</button>
+<button class="btn-sm secondary" onclick="showAddHospitalForm()">Cancel</button>
+</div>
+</div>
+<table class="table">
+<thead><tr><th>Name</th><th>Address</th><th>ER</th><th>Landline</th><th>Available</th><th>Action</th></tr></thead>
+<tbody id="hospitalsBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="tab-diseases" class="tab-content">
+<div class="card-section">
+<h3>Disease Management</h3>
+<button class="btn-add" onclick="showAddDiseaseForm()">+ Add Disease</button>
+<div id="addDiseaseForm" style="display:none" class="edit-form">
+<div class="form-row">
+<input type="text" id="disName" placeholder="Disease Name">
+</div>
+<div class="form-row">
+<textarea id="disDef" placeholder="Definition"></textarea>
+</div>
+<div class="form-row">
+<textarea id="disSymp" placeholder="Symptoms (comma separated)"></textarea>
+</div>
+<div class="save-cancel">
+<button class="btn-sm primary" onclick="saveDisease()">Save</button>
+<button class="btn-sm secondary" onclick="showAddDiseaseForm()">Cancel</button>
+</div>
+</div>
+<table class="table">
+<thead><tr><th>Name</th><th>Definition</th><th>Symptoms</th><th>Action</th></tr></thead>
+<tbody id="diseasesBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="tab-tests" class="tab-content">
+<div class="card-section">
+<h3>Medical Test Management</h3>
+<button class="btn-add" onclick="showAddTestForm()">+ Add Test</button>
+<div id="addTestForm" style="display:none" class="edit-form">
+<div class="form-row">
+<input type="text" id="testName" placeholder="Test Name">
+</div>
+<div class="form-row">
+<textarea id="testDesc" placeholder="Description"></textarea>
+</div>
+<div class="save-cancel">
+<button class="btn-sm primary" onclick="saveTest()">Save</button>
+<button class="btn-sm secondary" onclick="showAddTestForm()">Cancel</button>
+</div>
+</div>
+<table class="table">
+<thead><tr><th>Test Name</th><th>Description</th><th>Action</th></tr></thead>
+<tbody id="testsBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="tab-prices" class="tab-content">
+<div class="card-section">
+<h3>Hospital Test Prices</h3>
+<p style="color:var(--misted);font-size:0.9rem;margin-bottom:16px">Set prices for each test at each hospital. Mark as estimated or unavailable.</p>
+<div id="pricesContainer"></div>
+</div>
+</div>
+
+</main>
+
+<script>
+let db=JSON.parse(localStorage.getItem('hp_db'));
+if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+let currentUser=null;
+let editMode=null;
+let editType=null;
+
+function initPage(){
+const u=localStorage.getItem('hp_user');
+if(!u){window.location.href='admin-login.html';return;}
+currentUser=JSON.parse(u);
+if(currentUser.role!=='admin'){window.location.href='admin-login.html';return;}
+const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
+root.setAttribute('data-theme',savedTheme);
+document.getElementById('navUser').textContent=currentUser.full_name+' (Admin)';
+db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+renderHospitals();
+renderDiseases();
+renderTests();
+renderPrices();
+}
+
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+
+function openTab(tab){
+document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById('tab-'+tab).classList.add('active');
+event.target.classList.add('active');
+}
+
+function renderHospitals(){
+const cont=document.getElementById('hospitalsBody');
+cont.innerHTML=db.hospitals.map(h=>`<tr><td>${h.name}</td><td>${h.addr}</td><td>${h.er}</td><td>${h.land}</td><td><span class="status-badge ${h.available?'status-confirmed':'status-cancelled'}">${h.available?'Yes':'No'}</span></td><td><button class="btn-sm secondary" onclick="editHospital('${h.id}')">Edit</button> <button class="btn-sm danger" onclick="deleteHospital('${h.id}')">Delete</button></td></tr>`).join('');
+}
+function showAddHospitalForm(){
+const f=document.getElementById('addHospitalForm');
+f.style.display=f.style.display==='none'?'block':'none';
+editMode=null;editType='hospital';
+document.getElementById('hName').value='';document.getElementById('hAddr').value='';document.getElementById('hER').value='';document.getElementById('hLand').value='';document.getElementById('hAvail').checked=true;
+}
+function editHospital(id){
+const h=db.hospitals.find(x=>x.id===id);
+editMode=id;editType='hospital';
+document.getElementById('addHospitalForm').style.display='block';
+document.getElementById('hName').value=h.name;document.getElementById('hAddr').value=h.addr;document.getElementById('hER').value=h.er;document.getElementById('hLand').value=h.land;document.getElementById('hAvail').checked=h.available;
+}
+function saveHospital(){
+const name=document.getElementById('hName').value.trim();
+const addr=document.getElementById('hAddr').value.trim();
+const er=document.getElementById('hER').value.trim();
+const land=document.getElementById('hLand').value.trim();
+const avail=document.getElementById('hAvail').checked;
+if(!name||!addr){alert('Name and address required');return;}
+const d=getDb();
+if(editMode){const h=d.hospitals.find(x=>x.id===editMode);h.name=name;h.addr=addr;h.er=er;h.land=land;h.available=avail;}
+else{d.hospitals.push({id:'h-'+Date.now(),name,addr,er,land,available:avail});}
+saveDb(d);showAddHospitalForm();renderHospitals();renderPrices();
+}
+function deleteHospital(id){
+if(!confirm('Delete this hospital?'))return;
+const d=getDb();d.hospitals=d.hospitals.filter(x=>x.id!==id);saveDb(d);renderHospitals();renderPrices();
+}
+
+function renderDiseases(){
+const cont=document.getElementById('diseasesBody');
+cont.innerHTML=db.diseases.map(d=>`<tr><td>${d.name}</td><td>${d.def}</td><td>${d.symptoms.join(', ')}</td><td><button class="btn-sm secondary" onclick="editDisease('${d.id}')">Edit</button> <button class="btn-sm danger" onclick="deleteDisease('${d.id}')">Delete</button></td></tr>`).join('');
+}
+function showAddDiseaseForm(){
+const f=document.getElementById('addDiseaseForm');
+f.style.display=f.style.display==='none'?'block':'none';
+editMode=null;editType='disease';
+document.getElementById('disName').value='';document.getElementById('disDef').value='';document.getElementById('disSymp').value='';
+}
+function editDisease(id){
+const d=db.diseases.find(x=>x.id===id);
+editMode=id;editType='disease';
+document.getElementById('addDiseaseForm').style.display='block';
+document.getElementById('disName').value=d.name;document.getElementById('disDef').value=d.def;document.getElementById('disSymp').value=d.symptoms.join(', ');
+}
+function saveDisease(){
+const name=document.getElementById('disName').value.trim();
+const def=document.getElementById('disDef').value.trim();
+const symp=document.getElementById('disSymp').value.trim().split(',').map(s=>s.trim()).filter(Boolean);
+if(!name||!def){alert('Name and definition required');return;}
+const d=getDb();
+if(editMode){const dis=d.diseases.find(x=>x.id===editMode);dis.name=name;dis.def=def;dis.symptoms=symp;}
+else{d.diseases.push({id:'d-'+Date.now(),name,def,symptoms:symp});}
+saveDb(d);showAddDiseaseForm();renderDiseases();
+}
+function deleteDisease(id){
+if(!confirm('Delete this disease?'))return;
+const d=getDb();d.diseases=d.diseases.filter(x=>x.id!==id);saveDb(d);renderDiseases();
+}
+
+function renderTests(){
+const cont=document.getElementById('testsBody');
+cont.innerHTML=db.medical_tests.map(t=>`<tr><td>${t.name}</td><td>${t.description}</td><td><button class="btn-sm secondary" onclick="editTest('${t.id}')">Edit</button> <button class="btn-sm danger" onclick="deleteTest('${t.id}')">Delete</button></td></tr>`).join('');
+}
+function showAddTestForm(){
+const f=document.getElementById('addTestForm');
+f.style.display=f.style.display==='none'?'block':'none';
+editMode=null;editType='test';
+document.getElementById('testName').value='';document.getElementById('testDesc').value='';
+}
+function editTest(id){
+const t=db.medical_tests.find(x=>x.id===id);
+editMode=id;editType='test';
+document.getElementById('addTestForm').style.display='block';
+document.getElementById('testName').value=t.name;document.getElementById('testDesc').value=t.description;
+}
+function saveTest(){
+const name=document.getElementById('testName').value.trim();
+const desc=document.getElementById('testDesc').value.trim();
+if(!name){alert('Test name required');return;}
+const d=getDb();
+if(editMode){const t=d.medical_tests.find(x=>x.id===editMode);t.name=name;t.description=desc;}
+else{d.medical_tests.push({id:'t-'+Date.now(),name,description:desc});}
+saveDb(d);showAddTestForm();renderTests();renderPrices();
+}
+function deleteTest(id){
+if(!confirm('Delete this test?'))return;
+const d=getDb();d.medical_tests=d.medical_tests.filter(x=>x.id!==id);saveDb(d);renderTests();renderPrices();
+}
+
+function renderPrices(){
+const cont=document.getElementById('pricesContainer');
+let html='';
+db.hospitals.forEach(h=>{
+html+=`<h4 style="margin:20px 0 10px 0;font-size:1rem;color:var(--text)">${h.name}</h4><div class="price-grid">`;
+db.medical_tests.forEach(t=>{
+const price=db.hospital_test_prices[h.id]?db.hospital_test_prices[h.id][t.id]:null;
+html+=`<div class="price-item"><span class="test-name">${t.name}</span><input type="number" value="${price!==null?price:''}" onchange="updatePrice('${h.id}','${t.id}',this.value)"></div>`;
+});
+html+=`</div>`;
+});
+cont.innerHTML=html;
+}
+function updatePrice(hid,tid,val){
+const d=getDb();
+if(!d.hospital_test_prices[hid])d.hospital_test_prices[hid]={};
+d.hospital_test_prices[hid][tid]=val===''?null:parseFloat(val);
+saveDb(d);
+}
+</script>
+</body>
+</html>

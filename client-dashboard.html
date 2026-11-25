@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Dashboard - Health Pathway</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.info-layout{display:grid;grid-template-columns:260px 1fr;gap:0}
+.info-sidebar{position:sticky;top:0;height:100vh;background:var(--dark);color:#fff;padding:24px;border-right:1px solid var(--border)}
+.info-sidebar .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.info-sidebar .logo-mark{width:30px;height:30px}
+.info-sidebar .logo-text{color:#fff;font-weight:800;font-size:1.1rem}
+.info-sidebar nav ul{list-style:none;padding:0}
+.info-sidebar nav li{margin:10px 0}
+.info-sidebar nav a{color:var(--muted);text-decoration:none;font-weight:500;padding:10px 12px;border-radius:10px;display:block;transition:all 0.2s}
+.info-sidebar nav a:hover,.info-sidebar nav a.active{background:var(--primary);color:#0b1320}
+.info-sidebar .user-info{margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85rem;color:var(--muted)}
+.info-main{padding:40px;overflow-y:auto}
+.page-header{margin-bottom:32px}
+.page-header h1{font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px}
+.page-header p{color:var(--muted);margin:0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+.stat-card .stat-value{font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:4px}
+.stat-card .stat-label{color:var(--muted);font-size:0.9rem}
+.card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 20px 0;color:var(--text)}
+.btn-request{background:var(--primary);color:#0b1320;width:100%;padding:14px;border-radius:12px;font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 12px -4px rgba(34,211,238,0.35)}
+.btn-request:hover{background:var(--primary-hover);transform:translateY(-2px)}
+.btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
+.btn-sm.primary{background:var(--primary);color:#0b1320}
+.btn-sm.secondary{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-state b{color:var(--text)}
+.table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.table th, .table td{padding:12px 8px;border-bottom:1px solid var(--border);text-align:left}
+.table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.4px}
+.table tr:hover td{background:rgba(34,211,238,0.03)}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+.status-pending{background:#fef3c7;color:#92400e}
+.status-review{background:#dbeafe;color:#1e40af}
+.status-quoted{background:#dcfce7;color:#166534}
+.status-accepted{background:#bfdbfe;color:#1d4ed8}
+.status-confirmed{background:#cffafe;color:#089190}
+.status-cancelled{background:#fee2e2;color:#991b1b}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.test-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;font-size:0.85rem;color:var(--text)}
+.hospital-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.hospital-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.hospital-card h4{margin:0 0 8px 0;font-size:1rem;font-weight:700;color:var(--text)}
+.hospital-card p{margin:4px 0;color:var(--text-soft);font-size:0.85rem}
+@media (max-width:768px){.info-layout{grid-template-columns:1fr}.info-sidebar{display:none}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</header>
+
+<div class="info-layout">
+<aside class="info-sidebar">
+<div class="logo">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<nav>
+<ul>
+<li><a href="client-dashboard.html" class="nav-link active" data-i18n="client.dashboard">Information Dashboard</a></li>
+<li><a href="client-request.html" class="nav-link" data-i18n="client.request">Request Hospital Visit</a></li>
+</ul>
+</nav>
+<div class="user-info" id="sidebarUser"></div>
+</aside>
+
+<main class="info-main">
+<div class="page-header">
+<h1 data-i18n="page.title">Information Dashboard</h1>
+<p data-i18n="page.sub">Overview of hospitals, available medical tests, and visit preparation resources.</p>
+</div>
+
+<div class="stat-grid">
+<div class="stat-card"><div class="stat-value" id="statHospitals">0</div><div class="stat-label">Hospitals</div></div>
+<div class="stat-card"><div class="stat-value" id="statTests">0</div><div class="stat-label">Medical Tests</div></div>
+<div class="stat-card"><div class="stat-value" id="statDiseases">0</div><div class="stat-label">Diseases & Conditions</div></div>
+<div class="stat-card"><div class="stat-value" id="statRequests">0</div><div class="stat-label">Your Requests</div></div>
+</div>
+
+<!-- Quick Action -->
+<div class="card-section">
+<h3 style="display:flex;justify-content:space-between;align-items:center"><span>Quick Action</span><button class="btn-request" onclick="openRequestPage()">REQUEST A HOSPITAL VISIT</button></h3>
+<p style="color:var(--muted);margin-top:8px;font-size:0.9rem" data-i18n="page.requestDesc">Submit a new hospital visit request to begin the reservation and quotation process.</p>
+</div>
+
+<!-- Hospital Directory -->
+<div class="card-section">
+<h3 data-i18n="page.hospitals">Hospital Directory</h3>
+<div class="hospital-grid" id="hospitalDirectory"></div>
+</div>
+
+<!-- Available Tests -->
+<div class="card-section">
+<h3 data-i18n="page.tests">Available Medical Tests</h3>
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px" data-i18n="page.testsDesc">Browse diagnostic and laboratory procedures available across partner hospitals.</p>
+<div class="test-grid" id="testGrid"></div>
+</div>
+
+<!-- Visit Preparation -->
+<div class="card-section">
+<h3 data-i18n="page.prep">Visit Preparation Checklist</h3>
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px" data-i18n="page.prepDesc">Prepare your documents before your scheduled hospital visit.</p>
+<div class="checklist" id="prepChecklist"></div>
+<p id="prepProgress" style="margin-top:12px;font-size:0.85rem;color:var(--muted)"></p>
+</div>
+
+</main>
+</div>
+
+<script>
+const t = {
+en: {
+  client:{dashboard:'Information Dashboard',request:'Request Hospital Visit'},
+  page:{title:'Information Dashboard',sub:'Overview of hospitals, available medical tests, and visit preparation resources.',requestDesc:'Submit a new hospital visit request to begin the reservation and quotation process.',hospitals:'Hospital Directory',tests:'Available Medical Tests',testsDesc:'Browse diagnostic and laboratory procedures available across partner hospitals.',prep:'Visit Preparation Checklist',prepDesc:'Prepare your documents before your scheduled hospital visit.'},
+  nav:{dashboard:'Information Dashboard',request:'Request Hospital Visit'}
+},
+tl: {
+  client:{dashboard:'Impormasyon Dashboard',request:'Mag-request ng Ospital'},
+  page:{title:'Impormasyon Dashboard',sub:'Buod ng mga ospital, mga test medikal, at mga ресур para sa paghanda ng bisita.',requestDesc:'Mag-request ng bagong bisita sa ospital upang simulan ang proseso ng reserve at kwotasyon.',hospitals:'Direktoryo ng Ospital',tests:'Mga Ters Medikal na Availability',testsDesc:'Pangungunahan ang mga diagnostikong at mga procedura ng laboratoryo sa mga kasing ospital.',prep:'Checklist sa Pagbihis ng Bisita',prepDesc='Handaing iyong mga dokumento bago ang iyong itinadhana na bisita sa ospital.'},
+  nav:{dashboard:'Impormasyon Dashboard',request:'Mag-request ng Ospital'}
+}
+};
+let lang = localStorage.getItem('lang') || 'en';
+function setLang(l){lang=l;localStorage.setItem('lang',l);document.documentElement.lang=l;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');const parts=k.split('.');let val=t[lang];for(const p of parts){if(!val||!(p in val))break;val=val[p];}if(typeof val==='string'){if(el.tagName==='INPUT'&&el.placeholder)el.placeholder=val;else el.textContent=val;}});const lt=document.getElementById('langToggle');if(lt)lt.textContent=lang==='en'?'EN / TL':'TL / EN';}
+document.getElementById('langToggle').addEventListener('click',()=>setLang(lang==='en'?'tl':'en'));
+setLang(lang);
+</script>
+
+<script>
+let db=JSON.parse(localStorage.getItem('hp_db'));
+if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+
+let currentUser=null;
+function initPage(){
+const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
+root.setAttribute('data-theme',savedTheme);
+let clientId=localStorage.getItem('hp_client_id');
+if(!clientId){
+clientId='client-001';
+localStorage.setItem('hp_client_id',clientId);
+}
+currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
+document.getElementById('navUser').textContent='Client ('+clientId+')';
+document.getElementById('sidebarUser').textContent='Client · Guest';
+db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+renderDashboard();
+}
+
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+
+function renderDashboard(){
+document.getElementById('statHospitals').textContent=db.hospitals?db.hospitals.length:0;
+document.getElementById('statTests').textContent=db.medical_tests?db.medical_tests.length:0;
+document.getElementById('statDiseases').textContent=db.diseases?db.diseases.length:0;
+const myRequests=db.reservation_requests?db.reservation_requests.filter(r=>r.client_id===currentUser.id):[];
+document.getElementById('statRequests').textContent=myRequests.length;
+
+renderHospitalDirectory();
+renderTestGrid();
+renderPrepChecklist();
+}
+
+function renderHospitalDirectory(){
+const cont=document.getElementById('hospitalDirectory');
+const hospitals=db.hospitals||[];
+cont.innerHTML=hospitals.map(h=>`
+<div class="hospital-card">
+<h4>${h.name}</h4>
+<p>${h.addr}</p>
+<p>ER: ${h.er}</p>
+<p>Landline: ${h.land}</p>
+</div>
+`).join('');
+}
+
+function renderTestGrid(){
+const cont=document.getElementById('testGrid');
+const tests=db.medical_tests||[];
+cont.innerHTML=tests.map(t=>`<div class="test-chip">${t.name}</div>`).join('');
+}
+
+function renderPrepChecklist(){
+const cont=document.getElementById('prepChecklist');
+const items=["Valid ID","Doctor's request","Medical records","Previous lab results","Prescription/referral","PhilHealth info","Other documents"];
+const vc=db.visit_checklists?db.visit_checklists.find(c=>c.client_id===currentUser.id):null;
+let done=0;
+cont.innerHTML=items.map((it,idx)=>{
+const checked=vc&&!!vc.items[idx];
+if(checked)done++;
+return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><input type="checkbox" ${checked?'checked':''} onchange="togglePrep(${idx})">${it}</div>`;
+}).join('');
+document.getElementById('prepProgress').textContent=Math.round(done/items.length*100)+'% Complete';
+}
+function togglePrep(idx){
+const vc=db.visit_checklists.find(c=>c.client_id===currentUser.id);
+if(!vc){vc={client_id:currentUser.id,items:{},updated_at:new Date().toISOString()};db.visit_checklists.push(vc);}
+vc.items[idx]=!vc.items[idx];
+vc.updated_at=new Date().toISOString();
+saveDb(db);
+renderPrepChecklist();
+}
+
+function openRequestPage(){window.location.href='client-request.html';}
+
+const themeBtn=document.getElementById('themeToggle');
+const root=document.documentElement;
+themeBtn.addEventListener('click',()=>{
+const isDark=root.getAttribute('data-theme')==='dark';
+root.setAttribute('data-theme',isDark?'light':'dark');
+localStorage.setItem('theme',isDark?'light':'dark');
+});
+</script>
+</body>
+</html>

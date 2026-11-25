@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Requests - Health Pathway Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.admin-main{padding:40px;overflow-y:auto}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+.page-header h1{font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px}
+.page-header p{color:var(--muted);margin:0}
+.card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
+.card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 20px 0;color:var(--text)}
+.filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:end}
+.filter-bar input,.filter-bar select{padding:10px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text)}
+.table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.table th, .table td{padding:12px 8px;border-bottom:1px solid var(--border);text-align:left}
+.table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.4px}
+.table tr:hover td{background:rgba(14,165,164,0.03)}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+.status-pending{background:#fef3c7;color:#92400e}
+.status-review{background:#dbeafe;color:#1e40af}
+.status-quoted{background:#dcfce7;color:#166534}
+.status-accepted{background:#bfdbfe;color:#1d4ed8}
+.status-confirmed{background:#cffafe;color:#089190}
+.status-cancelled{background:#fee2e2;color:#991b1b}
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-state b{color:var(--text)}
+.btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
+.btn-sm.primary{background:var(--primary);color:#fff}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="logo" aria-label="Health Pathway">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<div class="header-actions" style="display:flex;align-items:center;gap:12px">
+<a href="admin-dashboard.html" class="btn ghost" style="margin-right:8px">Dashboard</a>
+<span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</div>
+</header>
+
+<main class="admin-main">
+<div class="page-header">
+<div>
+<h1>Manage Reservation Requests</h1>
+<p>Review and manage all client hospital visit requests.</p>
+</div>
+</div>
+
+<div class="filter-bar">
+<input type="text" id="searchReq" placeholder="Search request ID, client, hospital..." oninput="filterRequests()">
+<select id="statusFilter" onchange="filterRequests()"><option value="">All Status</option><option value="pending">Pending</option><option value="review">Under Review</option><option value="quoted">Quotation Sent</option><option value="accepted">Accepted</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select>
+</div>
+
+<div class="card-section">
+<h3>Reservation Requests</h3>
+<div id="requestsTable"></div>
+</div>
+
+</main>
+
+<script>
+let db=JSON.parse(localStorage.getItem('hp_db'));
+if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+let currentUser=null;
+function initPage(){
+const u=localStorage.getItem('hp_user');
+if(!u){window.location.href='admin-login.html';return;}
+currentUser=JSON.parse(u);
+if(currentUser.role!=='admin'){window.location.href='admin-login.html';return;}
+const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
+root.setAttribute('data-theme',savedTheme);
+document.getElementById('navUser').textContent=currentUser.full_name+' (Admin)';
+db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+renderRequests(db.reservation_requests);
+}
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+function renderRequests(list){
+const cont=document.getElementById('requestsTable');
+if(list.length===0){cont.innerHTML='<div class="empty-state"><p><b>No reservation requests.</b></p></div>';return;}
+cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead><tbody>'+list.map(r=>{
+const c=db.users.find(u=>u.id===r.client_id);
+const h=db.hospitals.find(h=>h.id===r.hospital_id);
+const testCount=r.test_ids?r.test_ids.length:0;
+return `<tr><td><b>#${r.id}</b></td><td>${c?c.full_name:'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td>${r.created_at}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequest('${r.id}')">Manage</button></td></tr>`;
+}).join('')+'</tbody></table>';
+}
+function filterRequests(){
+const q=document.getElementById('searchReq').value.toLowerCase();
+const s=document.getElementById('statusFilter').value;
+const filtered=db.reservation_requests.filter(r=>{
+const c=db.users.find(u=>u.id===r.client_id);
+const h=db.hospitals.find(h=>h.id===r.hospital_id);
+const match=(!q||r.id.toLowerCase().includes(q)||(c&&c.full_name.toLowerCase().includes(q))||(h&&h.name.toLowerCase().includes(q)));
+const statusMatch=!s||r.status===s;
+return match&&statusMatch;
+});
+renderRequests(filtered);
+}
+function viewRequest(id){window.location.href='admin-request-detail.html?id='+id;}
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotations - Health Pathway Client</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.quote-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+.quote-card h3{margin:0 0 8px 0;font-size:1.1rem;font-weight:700;color:var(--text)}
+.quote-card .quote-meta{display:flex;gap:16px;color:var(--muted);font-size:0.85rem;margin-bottom:16px;flex-wrap:wrap}
+.quote-items{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.quote-items h4{margin:0 0 12px 0;font-size:0.9rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.4px}
+.quote-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.quote-row:last-child{border-bottom:none}
+.quote-total{font-size:1.5rem;font-weight:800;color:var(--primary);margin:12px 0}
+.quote-actions{display:flex;gap:10px;margin-top:20px}
+.btn-quote{padding:12px 24px;border-radius:12px;font-weight:700;border:none;cursor:pointer;font-size:0.95rem}
+.btn-accept{background:var(--primary);color:#fff}
+.btn-accept:hover{background:var(--primary-hover)}
+.btn-decline{background:#fee2e2;color:#dc2626}
+.btn-decline:hover{background:#fecaca}
+.admin-notes{background:var(--border);border-radius:10px;padding:12px;font-size:0.85rem;color:var(--text-soft);margin-top:12px}
+.empty-state{text-align:center;padding:48px 24px;color:var(--misted)}
+.empty-state b{color:var(--text)}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+.status-quoted{background:#dcfce7;color:#166534}
+.status-accepted{background:#bfdbfe;color:#1d4ed8}
+.status-cancelled{background:#fee2e2;color:#991b1b}
+@media (max-width:640px){.quote-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="logo" aria-label="Health Pathway">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<div class="header-actions" style="display:flex;align-items:center;gap:12px">
+<a href="client-dashboard.html" class="btn ghost" style="margin-right:8px">Dashboard</a>
+<span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</div>
+</header>
+
+<main style="padding:40px">
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px">My Quotations</h1>
+<p style="color:var(--muted);margin:0 0 32px 0">Review and respond to quotations from hospital administrators.</p>
+<div id="quotationsContainer"></div>
+</main>
+
+<script>
+let db=JSON.parse(localStorage.getItem('hp_db'));
+if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+let currentUser=null;
+function initPage(){
+const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
+root.setAttribute('data-theme',savedTheme);
+let clientId=localStorage.getItem('hp_client_id');
+if(!clientId){
+clientId='client-001';
+localStorage.setItem('hp_client_id',clientId);
+}
+currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
+document.getElementById('navUser').textContent='Client ('+clientId+')';
+db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+renderQuotations();
+}
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+function renderQuotations(){
+const cont=document.getElementById('quotationsContainer');
+const myQuotes=db.quotations.filter(q=>q.client_id===currentUser.id);
+if(myQuotes.length===0){cont.innerHTML='<div class="empty-state"><p><b>No quotations yet.</b> Wait for an admin to send you a quotation.</p></div>';return;}
+cont.innerHTML=myQuotes.map(q=>{
+const r=db.reservation_requests.find(x=>x.id===q.request_id);
+const h=db.hospitals.find(h=>h.id===r.hospital_id);
+const itemsHtml=q.items.map(it=>`<div class="quote-row"><span>${it.test_name}</span><span>₱${it.price.toLocaleString()} (${it.price_type})</span></div>`).join('');
+const statusClass='status-'+q.status;
+return `<div class="quote-card">
+<div class="quote-meta"><span>Request #${q.request_id}</span><span>Hospital: ${h?h.name:'—'}</span><span>Date: ${q.created_at}</span><span class="status-badge ${statusClass}">${q.status}</span></div>
+<div class="quote-items">${itemsHtml}</div>
+<div class="quote-row" style="border-top:2px solid var(--border);margin-top:12px;padding-top:12px"><span>Additional Fees</span><span>₱${q.additional_fees||0}</span></div>
+<div class="quote-total">Total: ₱${q.total.toLocaleString()}</div>
+${q.admin_notes?`<div class="admin-notes"><b>Admin Notes:</b> ${q.admin_notes}</div>`:''}
+<div class="quote-actions">
+${q.status==='sent'?`<button class="btn-quote btn-accept" onclick="acceptQuote('${q.id}')">Accept Quotation</button><button class="btn-quote btn-decline" onclick="declineQuote('${q.id}')">Decline Quotation</button>`:`<span style="color:var(--muted);font-size:0.85rem">Status: ${q.status}</span>`}
+</div>
+</div>`;
+}).join('');
+}
+function acceptQuote(qid){
+if(!confirm('Accept this quotation? This will update your request status to Accepted.'))return;
+const q=db.quotations.find(x=>x.id===qid);
+const r=db.reservation_requests.find(x=>x.id===q.request_id);
+q.status='accepted';
+r.status='accepted';
+saveDb(db);
+db.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'Client '+currentUser.full_name+' accepted quotation #'+qid,read:false,created_at:new Date().toISOString()});
+saveDb(db);
+alert('Quotation accepted. Awaiting admin confirmation.');
+renderQuotations();
+}
+function declineQuote(qid){
+if(!confirm('Decline this quotation? This will cancel your request.'))return;
+const q=db.quotations.find(x=>x.id===qid);
+const r=db.reservation_requests.find(x=>x.id===q.request_id);
+q.status='declined';
+r.status='cancelled';
+saveDb(db);
+db.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'Client '+currentUser.full_name+' declined quotation #'+qid,read:false,created_at:new Date().toISOString()});
+saveDb(db);
+alert('Quotation declined. Request cancelled.');
+renderQuotations();
+}
+</script>
+</body>
+</html>

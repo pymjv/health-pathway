@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - Health Pathway</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.auth-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;width:100%;max-width:460px;box-shadow:var(--shadow)}
+.auth-card h2{text-align:center;margin-top:0;font-size:1.75rem;font-weight:800;letter-spacing:-0.5px}
+.auth-card p{text-align:center;color:var(--muted);margin-bottom:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:0.9rem;font-weight:600;color:var(--text-soft);margin-bottom:6px}
+.form-group input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;font:inherit;background:var(--card);color:var(--text);box-sizing:border-box}
+.form-group input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.btn-full{width:100%;padding:12px;margin-top:8px}
+.error-msg{color:#dc2626;font-size:0.85rem;display:none;margin-top:8px}
+.setup-note{background:var(--border);border-radius:12px;padding:16px;margin-top:20px;font-size:0.85rem;color:var(--text-soft)}
+.setup-note b{color:var(--text)}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
+<svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+<path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+</svg>
+<span class="logo-text">Health Pathway</span>
+</div>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</header>
+
+<div class="auth-page">
+<div class="auth-card">
+<h2 id="authTitle">Administrator Login</h2>
+<p style="text-align:center;color:var(--muted);margin-bottom:24px">Secure access to the Health Pathway admin portal.</p>
+
+<form id="loginForm">
+<div class="form-group">
+<label>Admin Username</label>
+<input type="text" id="adminUser" placeholder="admin" required>
+</div>
+<div class="form-group">
+<label>Admin Password</label>
+<input type="password" id="adminPass" placeholder="••••••••" required>
+</div>
+<p id="loginError" class="error-msg">Invalid administrator credentials.</p>
+<button type="submit" class="btn btn-full" id="adminBtn">Sign In as Admin</button>
+</form>
+
+<div class="auth-divider">OR</div>
+<p class="auth-link" id="authLink">Client? <a href="index.html">Go to Home</a></p>
+<div class="setup-note">
+<b>Initial Admin Account:</b> username <b>admin</b> / password <b>123</b>. Credentials stored in admin.json.
+</div>
+</div>
+</div>
+
+<script>
+const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
+root.setAttribute('data-theme',savedTheme);
+
+document.getElementById('themeToggle').addEventListener('click',()=>{
+const isDark=root.getAttribute('data-theme')==='dark';
+root.setAttribute('data-theme',isDark?'light':'dark');localStorage.setItem('theme',isDark?'light':'dark');
+});
+
+let adminCreds=null;
+async function loadAdminCreds(){
+try{
+const res=await fetch('admin.json');
+const data=await res.json();
+adminCreds=data.admin;
+}catch(e){
+console.error('Failed to load admin.json',e);
+adminCreds={username:'admin',password:'123'};
+}
+}
+loadAdminCreds();
+
+document.getElementById('loginForm').addEventListener('submit',(e)=>{
+e.preventDefault();
+const user=document.getElementById('adminUser').value.trim();
+const pass=document.getElementById('adminPass').value;
+const err=document.getElementById('loginError');
+const btn=document.getElementById('adminBtn');
+if(!adminCreds||user!==adminCreds.username||pass!==adminCreds.password){err.style.display='block';return;}
+err.style.display='none';
+btn.textContent='Signing in...';
+localStorage.setItem('isAdmin','true');
+localStorage.setItem('adminUser',user);
+setTimeout(()=>{window.location.href='admin-dashboard.html';},600);
+});
+</script>
+</body>
+</html>
