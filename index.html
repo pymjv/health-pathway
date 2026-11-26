@@ -49,78 +49,76 @@
 </div>
 <nav class="nav-links" id="navLinks">
 <ul style="display:flex;gap:4px;list-style:none;flex-wrap:wrap;margin:0;padding:0">
-<li><a href="index.html" class="active">Home</a></li>
-<li><a href="client-dashboard.html">Dashboard</a></li>
-<li><a href="admin-login.html">Admin Login</a></li>
+<li><a href="index.html" class="active" data-i18n="navHome">Home</a></li>
+<li><a href="client-dashboard.html" data-i18n="navDash">Dashboard</a></li>
+<li><a href="admin-login.html" data-i18n="navAdmin">Admin Login</a></li>
 </ul>
 </nav>
+<button class="btn ghost" id="langToggle">EN / TL</button>
 <button class="btn ghost" id="themeToggle">🌓 Theme</button>
 </header>
 
 <!-- HERO SECTION -->
 <section class="hero section visible">
-<h1>Your Health Journey Starts Here.</h1>
-<p>HealthPathway bridges the gap between patients and healthcare providers. We help you explore common diseases, understand medical tests, compare estimated hospital prices, and seamlessly prepare for your hospital visit — all in one secure platform.</p>
+<h1 data-i18n="heroTitle">Your Health Journey Starts Here.</h1>
+<p data-i18n="heroSub">HealthPathway bridges the gap between patients and healthcare providers. We help you explore common diseases, understand medical tests, compare estimated hospital prices, and seamlessly prepare for your hospital visit — all in one secure platform.</p>
 <div class="btn-group">
-<a href="client-dashboard.html" class="btn" style="font-size:1.1rem;padding:16px 36px;">Enter Client Dashboard</a>
+<a href="client-dashboard.html" class="btn" style="font-size:1.1rem;padding:16px 36px;" data-i18n="btnEnter">Enter Client Dashboard</a>
 </div>
 </section>
 
 <!-- ABOUT US / FEATURES -->
 <section class="section">
-<h2>Why Choose HealthPathway?</h2>
-<p class="sub">We simplify the often confusing process of navigating hospital visits, medical tests, and price estimates.</p>
+<h2 data-i18n="whyTitle">Why Choose HealthPathway?</h2>
+<p class="sub" data-i18n="whySub">We simplify the often confusing process of navigating hospital visits, medical tests, and price estimates.</p>
 
 <div class="feature-grid">
-  <!-- Feature 1 -->
   <div class="feature-card">
     <div class="feature-icon">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
     </div>
-    <h3>Hospital Directory</h3>
-    <p>Browse trusted medical facilities in Valencia City. View their exact addresses, emergency room contacts, and landlines to plan your visit.</p>
+    <h3 data-i18n="feat1Title">Hospital Directory</h3>
+    <p data-i18n="feat1Desc">Browse trusted medical facilities in Valencia City. View their exact addresses, emergency room contacts, and landlines to plan your visit.</p>
   </div>
 
-  <!-- Feature 2 -->
   <div class="feature-card">
     <div class="feature-icon">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
     </div>
-    <h3>Disease & Symptom Guide</h3>
-    <p>Understand 15 common diseases with clear definitions and comprehensive symptom lists. Educate yourself before consulting a doctor.</p>
+    <h3 data-i18n="feat2Title">Disease & Symptom Guide</h3>
+    <p data-i18n="feat2Desc">Understand 15 common diseases with clear definitions and comprehensive symptom lists. Educate yourself before consulting a doctor.</p>
   </div>
 
-  <!-- Feature 3 -->
   <div class="feature-card">
     <div class="feature-icon">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     </div>
-    <h3>Price Transparency</h3>
-    <p>Compare estimated medical test prices across 5 major hospitals. Request a quotation to get a clear, confirmed estimate before you go.</p>
+    <h3 data-i18n="feat3Title">Price Transparency</h3>
+    <p data-i18n="feat3Desc">Compare estimated medical test prices across 5 major hospitals. Request a quotation to get a clear, confirmed estimate before you go.</p>
   </div>
 </div>
 </section>
 
 <!-- HOW IT WORKS -->
 <section class="how-it-works">
-  <h2>How It Works</h2>
-  <p class="sub">Three simple steps to prepare for your next hospital visit.</p>
+  <h2 data-i18n="howTitle">How It Works</h2>
+  <p class="sub" data-i18n="howSub">Three simple steps to prepare for your next hospital visit.</p>
   
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
-      <h4>Explore & Search</h4>
-      <p>Use our dashboard to look up symptoms, find hospitals, and check estimated test prices.</p>
+      <h4 data-i18n="step1">Explore & Search</h4>
+      <p data-i18n="step1D">Use our dashboard to look up symptoms, find hospitals, and check estimated test prices.</p>
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <h4>Request a Visit</h4>
-      <p>Select your preferred hospital, the tests you need, and submit a reservation request.</p>
+      <h4 data-i18n="step2">Request a Visit</h4>
+      <p data-i18n="step2D">Select your preferred hospital, the tests you need, and submit a reservation request.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <h4>Receive a Quotation</h4>
-      <p>Our administrators will review your request, calculate the costs, and send you an official quotation to accept.</p>
+      <h4 data-i18n="step3">Receive a Quotation</h4>
+      <p data-i18n="step3D">Our administrators will review your request, calculate the costs, and send you an official quotation to accept.</p>
     </div>
   </div>
 </section>
@@ -129,32 +127,96 @@
 <div class="footer-grid">
 <div>
 <h4>HealthPathway</h4>
-<p>Navigating your health journey made easy — from symptoms to estimated costs.</p>
+<p data-i18n="footTag">Navigating your health journey made easy — from symptoms to estimated costs.</p>
 </div>
 <div>
-<h4>Quick Links</h4>
+<h4 data-i18n="footQuick">Quick Links</h4>
 <ul>
-<li><a href="client-dashboard.html">Client Dashboard</a></li>
-<li><a href="admin-login.html">Admin Portal</a></li>
+<li><a href="client-dashboard.html" data-i18n="navDash">Dashboard</a></li>
+<li><a href="admin-login.html" data-i18n="navAdmin">Admin Login</a></li>
 </ul>
 </div>
 <div>
-<h4>Contact & Support</h4>
+<h4 data-i18n="footContact">Contact & Support</h4>
 <p>Valencia City, Bukidnon</p>
-<p>For medical emergencies, please call your local hospital's ER directly.</p>
+<p data-i18n="footEmergency">For medical emergencies, please call your local hospital's ER directly.</p>
 </div>
 </div>
 <p class="copyright">© 2026 HealthPathway. All rights reserved.</p>
 </footer>
 
 <script>
-const themeBtn=document.getElementById('themeToggle');
-const root=document.documentElement;
-root.setAttribute('data-theme',localStorage.getItem('theme')||'dark');
-themeBtn.addEventListener('click',()=>{
-const isDark=root.getAttribute('data-theme')==='dark';
-root.setAttribute('data-theme',isDark?'light':'dark');
-localStorage.setItem('theme',isDark?'light':'dark');
+// 1. TRANSLATION DICTIONARY
+const t = {
+  en: {
+    navHome:'Home', navDash:'Dashboard', navAdmin:'Admin Login',
+    heroTitle:'Your Health Journey Starts Here.', 
+    heroSub:'HealthPathway bridges the gap between patients and healthcare providers. We help you explore common diseases, understand medical tests, compare estimated hospital prices, and seamlessly prepare for your hospital visit — all in one secure platform.',
+    btnEnter:'Enter Client Dashboard',
+    whyTitle:'Why Choose HealthPathway?',
+    whySub:'We simplify the often confusing process of navigating hospital visits, medical tests, and price estimates.',
+    feat1Title:'Hospital Directory', feat1Desc:'Browse trusted medical facilities in Valencia City. View their exact addresses, emergency room contacts, and landlines to plan your visit.',
+    feat2Title:'Disease & Symptom Guide', feat2Desc:'Understand 15 common diseases with clear definitions and comprehensive symptom lists. Educate yourself before consulting a doctor.',
+    feat3Title:'Price Transparency', feat3Desc:'Compare estimated medical test prices across 5 major hospitals. Request a quotation to get a clear, confirmed estimate before you go.',
+    howTitle:'How It Works', howSub:'Three simple steps to prepare for your next hospital visit.',
+    step1:'Explore & Search', step1D:'Use our dashboard to look up symptoms, find hospitals, and check estimated test prices.',
+    step2:'Request a Visit', step2D:'Select your preferred hospital, the tests you need, and submit a reservation request.',
+    step3:'Receive a Quotation', step3D:'Our administrators will review your request, calculate the costs, and send you an official quotation to accept.',
+    footTag:'Navigating your health journey made easy — from symptoms to estimated costs.', footQuick:'Quick Links', footContact:'Contact & Support', footEmergency:'For medical emergencies, please call your local hospital\'s ER directly.'
+  },
+  tl: {
+    navHome:'Bahay', navDash:'Dashboard', navAdmin:'Admin Login',
+    heroTitle:'Ang Iyong Lakbay sa Kalusugan Nagsisimula Dito.', 
+    heroSub:'Ang HealthPathway ay nag-uugnay sa pagitan ng mga pasyente at tagapagbigay ng kalusugan. Tinutulungan ka naming tuklasin ang mga karaniwang sakit, maunawaan ang mga medikal na test, ihambing ang tinatayang presyo ng ospital, at maghanda para sa iyong bisita — lahat sa isang secure na platform.',
+    btnEnter:'Pumasok sa Client Dashboard',
+    whyTitle:'Bakit Piliin ang HealthPathway?',
+    whySub:'Pinasimple namin ang proseso ng pag-navigate sa mga bisita sa ospital, medikal na test, at pagtantya ng presyo.',
+    feat1Title:'Direktoryo ng Ospital', feat1Desc:'I-browse ang mga pinagkakatiwalaang medikal na pasilidad sa Valencia City. Tingnan ang kanilang mga address, ER contact, at landline.',
+    feat2Title:'Gabay sa Sakit at Sintomas', feat2Desc:'Unawain ang 15 karaniwang sakit na may malinaw na kahulugan at listahan ng sintomas. Mag-aral bago kumonsulta sa doktor.',
+    feat3Title:'Transparency sa Presyo', feat3Desc:'Ihambing ang tinatayang presyo ng medikal na test sa 5 pangunahing ospital. Humiling ng kwotasyon para sa malinaw na estimate.',
+    howTitle:'Paano Ito Gumagana', howSub:'Tatlong simpleng hakbang para maghanda sa iyong susunod na bisita sa ospital.',
+    step1:'Tuklasin at Maghanap', step1D:'Gamitin ang aming dashboard para maghanap ng sintomas, ospital, at presyo ng test.',
+    step2:'Humiling ng Bisita', step2D:'Piliin ang iyong gustong ospital, mga test na kailangan, at magsumite ng request.',
+    step3:'Tumanggap ng Kwotasyon', step3D:'Susuriin ng aming admin ang iyong request, kalkulahin ang gastos, at magpadala ng opisyal na kwotasyon.',
+    footTag:'Ginagawang madali ang paglalakbay sa iyong kalusugan — mula sa mga sintomas hanggang sa tinatayang gastos.', footQuick:'Mabilis na Links', footContact:'Kontak at Suporta', footEmergency:'Para sa mga medikal na emerhensiya, mangyaring tumawag nang direkta sa ER ng iyong lokal na ospital.'
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+
+// 2. CORE TRANSLATION FUNCTION
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[currentLang] && t[currentLang][key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[currentLang][key];
+      else el.textContent = t[currentLang][key];
+    }
+  });
+
+  const lt = document.getElementById('langToggle');
+  if (lt) lt.textContent = currentLang === 'en' ? 'EN / TL' : 'TL / EN';
+}
+
+// 3. BOOTSTRAPPER
+window.addEventListener('DOMContentLoaded', () => {
+  applyLang();
+  
+  document.getElementById('langToggle').addEventListener('click', () => {
+    currentLang = currentLang === 'en' ? 'tl' : 'en';
+    localStorage.setItem('lang', currentLang);
+    applyLang();
+  });
+
+  const themeBtn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+  
+  themeBtn.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
 });
 </script>
 </body>

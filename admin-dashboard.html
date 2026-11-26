@@ -115,6 +115,21 @@
 </div>
 
 <script>
+let lang = localStorage.getItem('lang') || 'en';
+const t = {
+  en: { dash:'Dashboard', manageReq:'Manage Requests', quotes:'Quotations', data:'Data Management', logout:'Logout', guest:'Administrator' },
+  tl: { dash:'Dashboard', manageReq:'Pamahalaan ang mga Request', quotes:'Mga Kwotasyon', data:'Pamahalaan ng Data', logout:'Mag-logout', guest:'Administrator' }
+};
+
+function setLang(l){
+  lang=l; localStorage.setItem('lang',l);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(t[lang][key]) el.textContent = t[lang][key];
+  });
+  const lt=document.getElementById('langToggle');
+  if(lt) lt.textContent = lang==='en'?'EN / TL':'TL / EN';
+}
 function newId(p){return (crypto.randomUUID? p+'-'+crypto.randomUUID() : p+'-'+Date.now()+'-'+Math.floor(Math.random()*1e6));}
 function safeArr(x){return Array.isArray(x)?x:[];}
 function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}

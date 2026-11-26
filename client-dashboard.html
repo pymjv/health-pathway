@@ -6,6 +6,8 @@
 <title>Information Dashboard - Health Pathway</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<!-- This line connects the universal translation engine -->
+<script src="lang.js" defer></script>
 <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 .info-layout{display:grid;grid-template-columns:260px 1fr;gap:0}
@@ -70,6 +72,8 @@
 <span class="logo-text">Health Pathway</span>
 </div>
 <span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<!-- The Universal Language Button -->
+<button class="btn ghost" id="langToggle">EN / TL</button>
 <button class="btn ghost" id="themeToggle">🌓 Theme</button>
 </header>
 
@@ -85,11 +89,11 @@
 </div>
 <nav>
 <ul>
-<li><a onclick="showTab('overview', this)" class="active">Overview</a></li>
-<li><a onclick="showTab('hospitals', this)">Hospitals</a></li>
-<li><a onclick="showTab('diseases', this)">Diseases &amp; Symptoms</a></li>
-<li><a onclick="showTab('tests', this)">Test &amp; Prices</a></li>
-<li><a href="client-request.html">Request Visit</a></li>
+<li><a onclick="showTab('overview', this)" class="active" data-i18n="navOverview">Overview</a></li>
+<li><a onclick="showTab('hospitals', this)" data-i18n="navHospitals">Hospitals</a></li>
+<li><a onclick="showTab('diseases', this)" data-i18n="navDiseases">Diseases &amp; Symptoms</a></li>
+<li><a onclick="showTab('tests', this)" data-i18n="navTests">Test &amp; Prices</a></li>
+<li><a href="client-request.html" data-i18n="navRequest">Request Visit</a></li>
 </ul>
 </nav>
 <div class="user-info" id="sidebarUser"></div>
@@ -97,51 +101,51 @@
 
 <main class="info-main">
 <div class="page-header">
-<h1 id="pageTitle">Information Dashboard</h1>
-<p id="pageDesc">Browse our directory of hospitals, diseases, and medical tests.</p>
+<h1 id="pageTitle" data-i18n="titleOverview">Information Dashboard</h1>
+<p id="pageDesc" data-i18n="descOverview">Browse our directory of hospitals, diseases, and medical tests.</p>
 </div>
 
 <!-- TABS -->
 <div class="data-tabs">
-<button class="data-tab active" onclick="showTab('overview', this)">Overview</button>
-<button class="data-tab" onclick="showTab('hospitals', this)">Hospitals</button>
-<button class="data-tab" onclick="showTab('diseases', this)">Diseases &amp; Symptoms</button>
-<button class="data-tab" onclick="showTab('tests', this)">Test &amp; Prices</button>
+<button class="data-tab active" onclick="showTab('overview', this)" data-i18n="navOverview">Overview</button>
+<button class="data-tab" onclick="showTab('hospitals', this)" data-i18n="navHospitals">Hospitals</button>
+<button class="data-tab" onclick="showTab('diseases', this)" data-i18n="navDiseases">Diseases &amp; Symptoms</button>
+<button class="data-tab" onclick="showTab('tests', this)" data-i18n="navTests">Test &amp; Prices</button>
 </div>
 
 <!-- OVERVIEW TAB -->
 <div id="tab-overview" class="card-section active">
-<h3>Welcome to HealthPathway</h3>
-<p style="color:var(--muted);margin-bottom:20px">Use the tabs above or the sidebar to explore all available data.</p>
+<h3 data-i18n="welcome">Welcome to HealthPathway</h3>
+<p style="color:var(--muted);margin-bottom:20px" data-i18n="welcomeDesc">Use the tabs above or the sidebar to explore all available data.</p>
 <div style="display:flex;gap:16px;flex-wrap:wrap">
-<button class="btn" onclick="window.location.href='client-request.html'">Request a Hospital Visit</button>
-<button class="btn secondary" onclick="showTab('hospitals')">View Hospitals</button>
-<button class="btn secondary" onclick="showTab('diseases')">View Diseases</button>
+<button class="btn" onclick="window.location.href='client-request.html'" data-i18n="btnReqVisit">Request a Hospital Visit</button>
+<button class="btn secondary" onclick="showTab('hospitals')" data-i18n="btnViewHosp">View Hospitals</button>
+<button class="btn secondary" onclick="showTab('diseases')" data-i18n="btnViewDis">View Diseases</button>
 </div>
 </div>
 
 <!-- HOSPITALS TAB -->
 <div id="tab-hospitals" class="card-section">
-<h3>Available Hospitals</h3>
-<input type="text" class="search-bar" id="searchHospital" placeholder="Search hospitals by name or address..." oninput="renderHospitalsTab()">
+<h3 data-i18n="labelHosp">Available Hospitals</h3>
+<input type="text" class="search-bar" id="searchHospital" placeholder="Search hospitals by name or address..." oninput="renderHospitalsTab()" data-i18n="searchHosp">
 <div class="hospital-grid" id="hospitalsGrid"></div>
 </div>
 
 <!-- DISEASES TAB -->
 <div id="tab-diseases" class="card-section">
-<h3>Diseases &amp; Symptoms</h3>
-<input type="text" class="search-bar" id="searchDisease" placeholder="Search diseases..." oninput="renderDiseasesTab()">
+<h3 data-i18n="labelDis">Diseases &amp; Symptoms</h3>
+<input type="text" class="search-bar" id="searchDisease" placeholder="Search diseases..." oninput="renderDiseasesTab()" data-i18n="searchDis">
 <div class="disease-grid" id="diseasesGrid"></div>
 </div>
 
 <!-- TESTS TAB -->
 <div id="tab-tests" class="card-section">
-<h3>Test &amp; Prices</h3>
+<h3 data-i18n="labelTests">Test &amp; Prices</h3>
 <div style="margin-bottom:20px">
-<label>Filter by Hospital:</label>
+<label data-i18n="filterHosp">Filter by Hospital:</label>
 <select id="priceHospitalFilter" onchange="renderTestsTab()" style="max-width:400px"></select>
 </div>
-<input type="text" class="search-bar" id="searchTest" placeholder="Search tests..." oninput="renderTestsTab()">
+<input type="text" class="search-bar" id="searchTest" placeholder="Search tests..." oninput="renderTestsTab()" data-i18n="searchTests">
 <div class="price-grid" id="testsGrid"></div>
 </div>
 
@@ -158,31 +162,22 @@ let homeHospitals = [], homeDiseases = [], homeTests = [], homePrices = {};
 
 if(!db){
   fetch('data.json').then(r=>r.json()).then(d=>{
-    localStorage.setItem('hp_db',JSON.stringify(d));
-    db=d;
-    initPage();
-  }).catch(err => {
-    console.error("Failed to load data.json. Are you using Live Server?", err);
+    localStorage.setItem('hp_db',JSON.stringify(d)); db=d; initPage();
   });
-} else {
-  initPage();
-}
+} else { initPage(); }
 
 function initPage(){
   const root=document.documentElement;
-  const savedTheme=localStorage.getItem('theme')||'dark';
-  root.setAttribute('data-theme',savedTheme);
+  root.setAttribute('data-theme',localStorage.getItem('theme')||'dark');
   
-  let clientId=localStorage.getItem('hp_client_id');
-  if(!clientId){
-    clientId='client-001';
-    localStorage.setItem('hp_client_id',clientId);
-  }
-  currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
+  let clientId=localStorage.getItem('hp_client_id') || 'client-001';
+  localStorage.setItem('hp_client_id', clientId);
+  currentUser={id:clientId,full_name:'Guest',email:'',role:'client'};
   
-  // Changed to Guest User
-  document.getElementById('navUser').textContent='Guest User';
-  document.getElementById('sidebarUser').textContent='Guest User';
+  // The labels are translated by lang.js, but we need to set the dynamic user name here
+  const lang = localStorage.getItem('lang') || 'en';
+  document.getElementById('navUser').textContent = lang === 'en' ? 'Guest User' : 'Bisita';
+  document.getElementById('sidebarUser').textContent = lang === 'en' ? 'Guest User' : 'Bisita';
   
   db=JSON.parse(localStorage.getItem('hp_db')||'{}');
   homeHospitals=safeArr(db.hospitals).filter(h=>h.available!==false);
@@ -190,7 +185,6 @@ function initPage(){
   homeTests=safeArr(db.medical_tests);
   homePrices=safeObj(db.hospital_test_prices);
 
-  // Delay slightly to ensure DOM is fully ready
   setTimeout(() => {
     renderHospitalsTab();
     renderDiseasesTab();
@@ -198,14 +192,30 @@ function initPage(){
     renderTestsTab();
   }, 10);
 
+  // Toggles
   document.getElementById('themeToggle').addEventListener('click',()=>{
     const isDark=root.getAttribute('data-theme')==='dark';
     root.setAttribute('data-theme',isDark?'light':'dark');
     localStorage.setItem('theme',isDark?'light':'dark');
   });
+
+  // The magic listener: when they click EN/TL, wait for lang.js to translate, then redraw the grids
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setTimeout(() => {
+      const l = localStorage.getItem('lang') || 'en';
+      document.getElementById('navUser').textContent = l === 'en' ? 'Guest User' : 'Bisita';
+      document.getElementById('sidebarUser').textContent = l === 'en' ? 'Guest User' : 'Bisita';
+      renderHospitalsTab();
+      renderDiseasesTab();
+      renderTestsTab();
+      showTab(window.currentTab || 'overview'); // Keep the current tab's title translated
+    }, 50);
+  });
 }
 
 function showTab(tabId, el){
+  window.currentTab = tabId; // Remember which tab is open
+  
   document.querySelectorAll('.card-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.data-tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.info-sidebar nav a').forEach(a=>a.classList.remove('active'));
@@ -214,31 +224,39 @@ function showTab(tabId, el){
   if(el)el.classList.add('active');
   
   document.querySelectorAll('.data-tab').forEach(b=>{
-    if(b.textContent.toLowerCase().includes(tabId)) b.classList.add('active');
+    if(b.textContent.toLowerCase().includes(tabId) || b.getAttribute('data-i18n') === 'nav'+tabId.charAt(0).toUpperCase()+tabId.slice(1)) b.classList.add('active');
   });
 
-  const titles={
-    'overview':['Information Dashboard','Browse our directory of hospitals, diseases, and medical tests.'],
-    'hospitals':['Hospital Directory','View all partner hospitals and their contact details.'],
-    'diseases':['Diseases & Symptoms','Browse common diseases, definitions, and symptoms.'],
-    'tests':['Test & Prices','Compare estimated medical test prices across hospitals.']
+  // Update Page Title dynamically
+  const lang = localStorage.getItem('lang') || 'en';
+  const titleEl = document.getElementById('pageTitle');
+  const descEl = document.getElementById('pageDesc');
+  
+  const titles = {
+    en: { overview: ['Information Dashboard', 'Browse our directory of hospitals, diseases, and medical tests.'], hospitals: ['Hospital Directory', 'View all partner hospitals and their contact details.'], diseases: ['Diseases & Symptoms', 'Browse common diseases, definitions, and symptoms.'], tests: ['Test & Prices', 'Compare estimated medical test prices across hospitals.'] },
+    tl: { overview: ['Dashboard ng Impormasyon', 'I-browse ang aming direktoryo ng mga ospital, sakit, at medikal na test.'], hospitals: ['Direktoryo ng Ospital', 'Tingnan ang lahat ng katuwang na ospital at kanilang mga detalye.'], diseases: ['Mga Sakit at Sintomas', 'I-browse ang mga karaniwang sakit, kahulugan, at sintomas.'], tests: ['Mga Test at Presyo', 'Ihambing ang tinatayang presyo ng medikal na test sa mga ospital.'] }
   };
-  document.getElementById('pageTitle').textContent=titles[tabId][0];
-  document.getElementById('pageDesc').textContent=titles[tabId][1];
+
+  if(titleEl) { titleEl.textContent = titles[lang][tabId][0]; titleEl.removeAttribute('data-i18n'); }
+  if(descEl) { descEl.textContent = titles[lang][tabId][1]; descEl.removeAttribute('data-i18n'); }
 }
 
 function renderHospitalsTab(){
   const searchInput = document.getElementById('searchHospital');
   if(!searchInput) return;
   const q = searchInput.value.toLowerCase();
+  const lang = localStorage.getItem('lang') || 'en';
+  const addrLabel = lang === 'en' ? 'Address' : 'Lokasyon';
+  const erLabel = lang === 'en' ? 'ER' : 'ER';
+  const landLabel = lang === 'en' ? 'Landlines' : 'Telepono';
   
   const grid=document.getElementById('hospitalsGrid');
   grid.innerHTML=homeHospitals.filter(h=>h.name.toLowerCase().includes(q)||h.addr.toLowerCase().includes(q)).map(h=>`
     <div class="hospital-card">
     <h3>${h.name}</h3>
-    <p><strong>Address:</strong> ${h.addr}</p>
-    <p><strong>ER:</strong> ${h.er}</p>
-    <p><strong>Landlines:</strong> ${h.land}</p>
+    <p><strong>${addrLabel}:</strong> ${h.addr}</p>
+    <p><strong>${erLabel}:</strong> ${h.er}</p>
+    <p><strong>${landLabel}:</strong> ${h.land}</p>
     </div>`).join('');
 }
 
@@ -246,13 +264,16 @@ function renderDiseasesTab(){
   const searchInput = document.getElementById('searchDisease');
   if(!searchInput) return;
   const q = searchInput.value.toLowerCase();
+  const lang = localStorage.getItem('lang') || 'en';
+  const defLabel = lang === 'en' ? 'Definition' : 'Kahulugan';
+  const symLabel = lang === 'en' ? 'Symptoms' : 'Mga Sintomas';
   
   const grid=document.getElementById('diseasesGrid');
   grid.innerHTML=homeDiseases.filter(d=>d.name.toLowerCase().includes(q)).map(d=>`
     <div class="disease-card">
     <h3>${d.name}</h3>
-    <p class="def"><strong>Definition:</strong> ${d.def}</p>
-    <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Symptoms:</p>
+    <p class="def"><strong>${defLabel}:</strong> ${d.def}</p>
+    <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${symLabel}:</p>
     <ul>${d.symptoms.map(s=>`<li>${s}</li>`).join('')}</ul>
     </div>`).join('');
 }
@@ -272,12 +293,16 @@ function renderTestsTab(){
   const q=searchInput.value.toLowerCase();
   const grid=document.getElementById('testsGrid');
   const prices=homePrices[hid]||{};
+  const lang = localStorage.getItem('lang') || 'en';
+  
+  const testLabel = lang === 'en' ? 'Test' : 'Test';
+  const priceLabel = lang === 'en' ? 'Price (₱)' : 'Presyo (₱)';
 
   grid.innerHTML=homeTests.filter(t=>t.name.toLowerCase().includes(q)).map(t=>{
     const price=prices[t.id];
     return `<div class="price-card">
     <h3>${t.name}</h3>
-    <table class="price-table"><tr><th>Test</th><th>Price (₱)</th></tr><tr><td>${t.name}</td><td>${price!==null&&price!==undefined?'₱'+price.toLocaleString():'—'}</td></tr></table>
+    <table class="price-table"><tr><th>${testLabel}</th><th>${priceLabel}</th></tr><tr><td>${t.name}</td><td>${price!==null&&price!==undefined?'₱'+price.toLocaleString():'—'}</td></tr></table>
     <p style="font-size:0.8rem;color:var(--text-soft);margin-top:8px">${t.description||'Medical test.'}</p>
     </div>`;
   }).join('');

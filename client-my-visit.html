@@ -24,7 +24,7 @@
 .checklist-item:last-child{border-bottom:none}
 .checklist-item input{width:18px;height:18px;accent-color:var(--primary)}
 .instructions{background:var(--border);border-radius:10px;padding:16px;font-size:0.9rem;color:var(--text-soft)}
-.print-btn{background:var(--primary);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
+.print-btn{background:var(--primary);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;border:none;cursor:pointer; margin-top: 12px;}
 .print-btn:hover{background:var(--primary-hover)}
 .empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
 .empty-state b{color:var(--text)}
@@ -42,101 +42,176 @@
 <span class="logo-text">Health Pathway</span>
 </div>
 <div class="header-actions" style="display:flex;align-items:center;gap:12px">
-<a href="client-dashboard.html" class="btn ghost" style="margin-right:8px">Dashboard</a>
+<a href="client-dashboard.html" class="btn ghost" style="margin-right:8px" id="navDash">Dashboard</a>
 <span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
+<button class="btn ghost" id="langToggle">EN / TL</button>
 <button class="btn ghost" id="themeToggle">🌓 Theme</button>
 </div>
 </header>
 
-<main style="padding:40px">
-<h1 style="font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px">My Visit</h1>
-<p style="color:var(--muted);margin:0 0 32px 0">Your confirmed hospital visit details and document checklist.</p>
-<div id="visitContainer" class="empty-state"><p><b>No confirmed visit yet.</b> Once an admin confirms your reservation, it will appear here.</p></div>
+<main style="padding:40px; max-width: 1200px; margin: 0 auto;">
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px" id="pageTitle">My Visit</h1>
+<p style="color:var(--muted);margin:0 0 32px 0" id="pageSub">Your confirmed hospital visit details and document checklist.</p>
+<div id="visitContainer" class="empty-state"><p><b id="noVisitText">No confirmed visit yet.</b></p></div>
 </main>
 
 <script>
-function safeArr(x){return Array.isArray(x)?x:[];}
-function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
-let db=JSON.parse(localStorage.getItem('hp_db'));
-if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
-let currentUser=null;
+// --- 1. TRANSLATION DICTIONARY ---
+const t = {
+  en: {
+    navDash: "Dashboard", guest: "Guest User", pageTitle: "My Visit", pageSub: "Your confirmed hospital visit details and document checklist.",
+    noVisit: "No confirmed visit yet. Once an admin confirms your reservation, it will appear here.",
+    confirmedVisit: "Confirmed Visit", reqId: "Request ID", hosp: "Hospital", addr: "Address", contact: "Contact", vDate: "Visit Date", vTime: "Visit Time",
+    selectedTests: "Selected Medical Tests", addFees: "Additional Fees", estTotal: "Estimated Total", resStatus: "Reservation Status", statusConf: "Confirmed", adminInst: "Admin Instructions:",
+    docCheck: "Document Checklist", docSub: "Mark documents as prepared for your visit.", printBtn: "Print / Save Visit Summary", complete: "Complete",
+    chk1: "Valid ID", chk2: "Doctor's request", chk3: "Medical records", chk4: "Previous lab results", chk5: "Prescription/referral", chk6: "PhilHealth info", chk7: "Other documents"
+  },
+  tl: {
+    navDash: "Dashboard", guest: "Bisita", pageTitle: "Aking Bisita", pageSub: "Ang iyong kumpirmadong detalye ng bisita sa ospital at checklist ng mga dokumento.",
+    noVisit: "Wala pang kumpirmadong bisita. Kapag kinumpirma ng admin ang iyong reserbasyon, lalabas ito dito.",
+    confirmedVisit: "Kumpirmadong Bisita", reqId: "Request ID", hosp: "Ospital", addr: "Lokasyon", contact: "Kontak", vDate: "Petsa ng Bisita", vTime: "Oras ng Bisita",
+    selectedTests: "Mga Napiling Medikal na Test", addFees: "Karagdagang Bayad", estTotal: "Tinatayang Kabuuan", resStatus: "Katayuan ng Reserbasyon", statusConf: "Kumpirmado", adminInst: "Tagubilin ng Admin:",
+    docCheck: "Checklist ng Dokumento", docSub: "Markahan ang mga dokumento bilang handa na para sa iyong bisita.", printBtn: "I-print / I-save ang Buod ng Bisita", complete: "Tapos na",
+    chk1: "Valid ID", chk2: "Request ng Doktor", chk3: "Medikal na rekord", chk4: "Mga dating lab results", chk5: "Reseta/Referral", chk6: "Impormasyon ng PhilHealth", chk7: "Iba pang dokumento"
+  }
+};
 
-function initPage(){
-const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
-root.setAttribute('data-theme',savedTheme);
-let clientId=localStorage.getItem('hp_client_id');
-if(!clientId){
-clientId='client-001';
-localStorage.setItem('hp_client_id',clientId);
+let lang = localStorage.getItem('lang') || 'en';
+let db = JSON.parse(localStorage.getItem('hp_db'));
+let currentUser = null;
+
+// --- 2. CORE TRANSLATION FUNCTION ---
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('lang', l);
+  document.documentElement.lang = l;
+
+  // Translate Static Elements
+  const lt = document.getElementById('langToggle');
+  if (lt) lt.textContent = lang === 'en' ? 'EN / TL' : 'TL / EN';
+  document.getElementById('navDash').textContent = t[lang].navDash;
+  document.getElementById('pageTitle').textContent = t[lang].pageTitle;
+  document.getElementById('pageSub').textContent = t[lang].pageSub;
+  
+  // Translate Guest User
+  const navUser = document.getElementById('navUser');
+  if(navUser && currentUser) navUser.textContent = t[lang].guest;
+
+  // Re-render dynamic content
+  if (typeof renderVisit === 'function') renderVisit();
 }
-currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
-document.getElementById('navUser').textContent='Client ('+clientId+')';
-db=JSON.parse(localStorage.getItem('hp_db')||'{}');
-renderVisit();
 
-// Fix theme toggle
-document.getElementById('themeToggle').addEventListener('click',()=>{
-const isDark=root.getAttribute('data-theme')==='dark';
-root.setAttribute('data-theme',isDark?'light':'dark');
-localStorage.setItem('theme',isDark?'light':'dark');
+// --- 3. APP LOGIC ---
+function initPage() {
+  let clientId = localStorage.getItem('hp_client_id') || 'client-001';
+  currentUser = {id: clientId, full_name: 'Guest', role: 'client'};
+  
+  const root = document.documentElement;
+  root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+  
+  db = JSON.parse(localStorage.getItem('hp_db') || '{}');
+  
+  // Apply translation immediately on load
+  setLang(lang);
+
+  // Event Listeners
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+  
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLang(lang === 'en' ? 'tl' : 'en');
+  });
+}
+
+function saveDb(d) { localStorage.setItem('hp_db', JSON.stringify(d)); db = d; }
+function safeArr(x) { return Array.isArray(x) ? x : []; }
+
+// --- 4. RENDER VISIT ---
+function renderVisit() {
+  const cont = document.getElementById('visitContainer');
+  const confirmed = safeArr(db.reservation_requests).filter(r => r.client_id === currentUser.id && r.status === 'confirmed');
+  
+  if (confirmed.length === 0) {
+    cont.innerHTML = `<div class="empty-state"><p><b>${t[lang].noVisit}</b></p></div>`;
+    return;
+  }
+  
+  const r = confirmed[0];
+  const h = safeArr(db.hospitals).find(h => h.id === r.hospital_id);
+  const q = safeArr(db.quotations).find(q => q.request_id === r.id);
+  const vc = safeArr(db.visit_checklists).find(c => c.client_id === currentUser.id);
+  
+  const itemsHtml = (q ? q.items : []).map(it => `<div class="test-item"><span class="test-name">${it.test_name}</span><span class="test-price">₱${it.price.toLocaleString()}</span></div>`).join('');
+  
+  let done = 0;
+  const checklistItems = [t[lang].chk1, t[lang].chk2, t[lang].chk3, t[lang].chk4, t[lang].chk5, t[lang].chk6, t[lang].chk7];
+  
+  const clHtml = checklistItems.map((it, idx) => {
+    const checked = vc && !!vc.items[idx];
+    if (checked) done++;
+    return `<div class="checklist-item"><input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleChecklist(${idx})">${it}</div>`;
+  }).join('');
+
+  cont.innerHTML = `
+  <div class="visit-card">
+    <h3>${t[lang].confirmedVisit}</h3>
+    <div class="visit-info">
+      <div class="info-item"><span class="label">${t[lang].reqId}</span><span class="value">#${r.id}</span></div>
+      <div class="info-item"><span class="label">${t[lang].hosp}</span><span class="value">${h ? h.name : '—'}</span></div>
+      <div class="info-item"><span class="label">${t[lang].addr}</span><span class="value">${h ? h.addr : '—'}</span></div>
+      <div class="info-item"><span class="label">${t[lang].contact}</span><span class="value">${h ? h.land : '—'}</span></div>
+      <div class="info-item"><span class="label">${t[lang].vDate}</span><span class="value">${r.visit_date || '—'}</span></div>
+      <div class="info-item"><span class="label">${t[lang].vTime}</span><span class="value">${r.visit_time || '—'}</span></div>
+    </div>
+    
+    <h3 style="margin-top:24px">${t[lang].selectedTests}</h3>
+    <div class="test-list">${itemsHtml}</div>
+    ${q ? `<div style="margin-top:16px"><div class="quote-row" style="display:flex;justify-content:space-between"><span>${t[lang].addFees}</span><span>₱${q.additional_fees || 0}</span></div><div class="quote-row" style="display:flex;justify-content:space-between;border-top:2px solid var(--border);margin-top:8px;padding-top:8px"><span>${t[lang].estTotal}</span><span style="font-weight:800;color:var(--primary)">₱${q.total.toLocaleString()}</span></div></div>` : ''}
+    
+    <h3 style="margin-top:24px">${t[lang].resStatus}</h3>
+    <span class="status-badge status-confirmed">${t[lang].statusConf}</span>
+    ${q && q.admin_notes ? `<div class="instructions" style="margin-top:12px"><b>${t[lang].adminInst}</b> ${q.admin_notes}</div>` : ''}
+  </div>
+  <div class="visit-card">
+    <h3>${t[lang].docCheck}</h3>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">${t[lang].docSub}</p>
+    <div id="checklistContainer">${clHtml}</div>
+    <div style="margin-top:12px;font-size:0.85rem;color:var(--muted)">${Math.round(done / checklistItems.length * 100)}% ${t[lang].complete}</div>
+    <button class="print-btn" onclick="window.print()">${t[lang].printBtn}</button>
+  </div>
+  `;
+}
+
+function toggleChecklist(idx) {
+  const vcl = safeArr(db.visit_checklists);
+  let vc = vcl.find(c => c.client_id === currentUser.id);
+  if (!vc) { vc = {client_id: currentUser.id, items: {}, updated_at: new Date().toISOString()}; vcl.push(vc); db.visit_checklists = vcl; }
+  vc.items[idx] = !vc.items[idx];
+  vc.updated_at = new Date().toISOString();
+  saveDb(db);
+  renderVisit();
+}
+
+// --- 5. BOOTSTRAPPER ---
+// This waits for the HTML to fully load before running the scripts
+window.addEventListener('DOMContentLoaded', () => {
+  if (!db) {
+    fetch('data.json').then(r => r.json()).then(d => {
+      localStorage.setItem('hp_db', JSON.stringify(d));
+      db = d;
+      initPage();
+    }).catch(err => {
+      console.error("Using local data failed.");
+      db = {reservation_requests: [], quotations: [], hospitals: [], visit_checklists: []};
+      initPage();
+    });
+  } else {
+    initPage();
+  }
 });
-}
-
-function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
-function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
-
-function renderVisit(){
-const cont=document.getElementById('visitContainer');
-const confirmed=safeArr(db.reservation_requests).filter(r=>r.client_id===currentUser.id&&r.status==='confirmed');
-if(confirmed.length===0){cont.innerHTML='<div class="empty-state"><p><b>No confirmed visit yet.</b> Once an admin confirms your reservation, it will appear here.</p></div>';return;}
-const r=confirmed[0];
-const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
-const q=safeArr(db.quotations).find(q=>q.request_id===r.id);
-const vc=safeArr(db.visit_checklists).find(c=>c.client_id===currentUser.id);
-const itemsHtml=(q?q.items:[]).map(it=>`<div class="test-item"><span class="test-name">${it.test_name}</span><span class="test-price">₱${it.price.toLocaleString()}</span></div>`).join('');
-let done=0;
-const checklistItems=["Valid ID","Doctor's request","Medical records","Previous lab results","Prescription/referral","PhilHealth info","Other documents"];
-const clHtml=checklistItems.map((it,idx)=>{
-const checked=vc&&!!vc.items[idx];
-if(checked)done++;
-return `<div class="checklist-item"><input type="checkbox" ${checked?'checked':''} onchange="toggleChecklist(${idx})">${it}</div>`;
-}).join('');
-cont.innerHTML=`
-<div class="visit-card">
-<h3>Confirmed Visit</h3>
-<div class="visit-info">
-<div class="info-item"><span class="label">Request ID</span><span class="value">#${r.id}</span></div>
-<div class="info-item"><span class="label">Hospital</span><span class="value">${h?h.name:'—'}</span></div>
-<div class="info-item"><span class="label">Address</span><span class="value">${h?h.addr:'—'}</span></div>
-<div class="info-item"><span class="label">Contact</span><span class="value">${h?h.land:'—'}</span></div>
-<div class="info-item"><span class="label">Visit Date</span><span class="value">${r.visit_date||'—'}</span></div>
-<div class="info-item"><span class="label">Visit Time</span><span class="value">${r.visit_time||'—'}</span></div>
-</div>
-<h3 style="margin-top:24px">Selected Medical Tests</h3>
-<div class="test-list">${itemsHtml}</div>
-${q?`<div style="margin-top:16px"><div class="quote-row" style="display:flex;justify-content:space-between"><span>Additional Fees</span><span>₱${q.additional_fees||0}</span></div><div class="quote-row" style="display:flex;justify-content:space-between;border-top:2px solid var(--border);margin-top:8px;padding-top:8px"><span>Estimated Total</span><span style="font-weight:800;color:var(--primary)">₱${q.total.toLocaleString()}</span></div></div>`:''}
-<h3 style="margin-top:24px">Reservation Status</h3>
-<span class="status-badge status-confirmed">Confirmed</span>
-${q && q.admin_notes?`<div class="instructions" style="margin-top:12px"><b>Admin Instructions:</b> ${q.admin_notes}</div>`:''}
-</div>
-<div class="visit-card">
-<h3>Document Checklist</h3>
-<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">Mark documents as prepared for your visit.</p>
-<div id="checklistContainer">${clHtml}</div>
-<div style="margin-top:12px;font-size:0.85rem;color:var(--muted)">${Math.round(done/checklistItems.length*100)}% Complete</div>
-<button class="print-btn" onclick="window.print()">Print / Save Visit Summary</button>
-</div>
-`;
-}
-function toggleChecklist(idx){
-const vcl=safeArr(db.visit_checklists);
-let vc=vcl.find(c=>c.client_id===currentUser.id);
-if(!vc){vc={client_id:currentUser.id,items:{},updated_at:new Date().toISOString()};vcl.push(vc);db.visit_checklists=vcl;}
-vc.items[idx]=!vc.items[idx];
-vc.updated_at=new Date().toISOString();
-saveDb(db);
-renderVisit();
-}
 </script>
 </body>
 </html>
