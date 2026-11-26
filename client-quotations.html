@@ -23,7 +23,7 @@
 .btn-decline{background:#fee2e2;color:#dc2626}
 .btn-decline:hover{background:#fecaca}
 .admin-notes{background:var(--border);border-radius:10px;padding:12px;font-size:0.85rem;color:var(--text-soft);margin-top:12px}
-.empty-state{text-align:center;padding:48px 24px;color:var(--misted)}
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
 .empty-state b{color:var(--text)}
 .status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
 .status-quoted{background:#dcfce7;color:#166534}
@@ -34,7 +34,7 @@
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -56,9 +56,13 @@
 </main>
 
 <script>
+function newId(p){return (crypto.randomUUID? p+'-'+crypto.randomUUID() : p+'-'+Date.now()+'-'+Math.floor(Math.random()*1e6));}
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
 let db=JSON.parse(localStorage.getItem('hp_db'));
 if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
 let currentUser=null;
+
 function initPage(){
 const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
 root.setAttribute('data-theme',savedTheme);
@@ -71,17 +75,26 @@ currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
 document.getElementById('navUser').textContent='Client ('+clientId+')';
 db=JSON.parse(localStorage.getItem('hp_db')||'{}');
 renderQuotations();
+
+// Fix theme toggle
+document.getElementById('themeToggle').addEventListener('click',()=>{
+const isDark=root.getAttribute('data-theme')==='dark';
+root.setAttribute('data-theme',isDark?'light':'dark');
+localStorage.setItem('theme',isDark?'light':'dark');
+});
 }
+
 function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
 function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+
 function renderQuotations(){
 const cont=document.getElementById('quotationsContainer');
-const myQuotes=db.quotations.filter(q=>q.client_id===currentUser.id);
+const myQuotes=safeArr(db.quotations).filter(q=>q.client_id===currentUser.id);
 if(myQuotes.length===0){cont.innerHTML='<div class="empty-state"><p><b>No quotations yet.</b> Wait for an admin to send you a quotation.</p></div>';return;}
 cont.innerHTML=myQuotes.map(q=>{
-const r=db.reservation_requests.find(x=>x.id===q.request_id);
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const itemsHtml=q.items.map(it=>`<div class="quote-row"><span>${it.test_name}</span><span>₱${it.price.toLocaleString()} (${it.price_type})</span></div>`).join('');
+const r=safeArr(db.reservation_requests).find(x=>x.id===q.request_id);
+const h=r?safeArr(db.hospitals).find(h=>h.id===r.hospital_id):null;
+const itemsHtml=(q.items||[]).map(it=>`<div class="quote-row"><span>${it.test_name}</span><span>₱${it.price.toLocaleString()} (${it.price_type})</span></div>`).join('');
 const statusClass='status-'+q.status;
 return `<div class="quote-card">
 <div class="quote-meta"><span>Request #${q.request_id}</span><span>Hospital: ${h?h.name:'—'}</span><span>Date: ${q.created_at}</span><span class="status-badge ${statusClass}">${q.status}</span></div>
@@ -95,26 +108,28 @@ ${q.status==='sent'?`<button class="btn-quote btn-accept" onclick="acceptQuote('
 </div>`;
 }).join('');
 }
+
 function acceptQuote(qid){
 if(!confirm('Accept this quotation? This will update your request status to Accepted.'))return;
-const q=db.quotations.find(x=>x.id===qid);
-const r=db.reservation_requests.find(x=>x.id===q.request_id);
-q.status='accepted';
-r.status='accepted';
-saveDb(db);
-db.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'Client '+currentUser.full_name+' accepted quotation #'+qid,read:false,created_at:new Date().toISOString()});
+const q=safeArr(db.quotations).find(x=>x.id===qid);
+const r=safeArr(db.reservation_requests).find(x=>x.id===q.request_id);
+if(q){q.status='accepted';}
+if(r){r.status='accepted';}
+db.notifications = safeArr(db.notifications);
+db.notifications.push({id:newId('n'),user_id:'admin-001',message:'Client '+currentUser.full_name+' accepted quotation #'+qid,read:false,created_at:new Date().toISOString()});
 saveDb(db);
 alert('Quotation accepted. Awaiting admin confirmation.');
 renderQuotations();
 }
+
 function declineQuote(qid){
 if(!confirm('Decline this quotation? This will cancel your request.'))return;
-const q=db.quotations.find(x=>x.id===qid);
-const r=db.reservation_requests.find(x=>x.id===q.request_id);
-q.status='declined';
-r.status='cancelled';
-saveDb(db);
-db.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'Client '+currentUser.full_name+' declined quotation #'+qid,read:false,created_at:new Date().toISOString()});
+const q=safeArr(db.quotations).find(x=>x.id===qid);
+const r=safeArr(db.reservation_requests).find(x=>x.id===q.request_id);
+if(q){q.status='declined';}
+if(r){r.status='cancelled';}
+db.notifications = safeArr(db.notifications);
+db.notifications.push({id:newId('n'),user_id:'admin-001',message:'Client '+currentUser.full_name+' declined quotation #'+qid,read:false,created_at:new Date().toISOString()});
 saveDb(db);
 alert('Quotation declined. Request cancelled.');
 renderQuotations();

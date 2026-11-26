@@ -20,22 +20,13 @@
 .table th, .table td{padding:12px 8px;border-bottom:1px solid var(--border);text-align:left}
 .table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.4px}
 .table tr:hover td{background:rgba(14,165,164,0.03)}
-.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
-.status-pending{background:#fef3c7;color:#92400e}
-.status-review{background:#dbeafe;color:#1e40af}
-.status-quoted{background:#dcfce7;color:#166534}
-.status-accepted{background:#bfdbfe;color:#1d4ed8}
-.status-confirmed{background:#cffafe;color:#089190}
-.status-cancelled{background:#fee2e2;color:#991b1b}
 .empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
 .empty-state b{color:var(--text)}
-.btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
-.btn-sm.primary{background:var(--primary);color:#fff}
 </style>
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -71,38 +62,52 @@
 </main>
 
 <script>
-let db=JSON.parse(localStorage.getItem('hp_db'));
+function newId(p){return (crypto.randomUUID? p+'-'+crypto.randomUUID() : p+'-'+Date.now()+'-'+Math.floor(Math.random()*1e6));}
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));}
+function requireAdmin(){
+const u=localStorage.getItem('hp_user');
+if(!u){window.location.href='admin-login.html';return null;}
+try{const cu=JSON.parse(u);if(cu.role!=='admin'){window.location.href='admin-login.html';return null;}}catch(e){window.location.href='admin-login.html';return null;}
+return JSON.parse(u);
+}
+function logout(){
+localStorage.removeItem('isAdmin');
+localStorage.removeItem('adminUser');
+localStorage.removeItem('hp_user');
+window.location.href='admin-login.html';
+}
+let db = JSON.parse(localStorage.getItem('hp_db') || 'null');
 if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
 let currentUser=null;
 function initPage(){
-const u=localStorage.getItem('hp_user');
-if(!u){window.location.href='admin-login.html';return;}
-currentUser=JSON.parse(u);
-if(currentUser.role!=='admin'){window.location.href='admin-login.html';return;}
+currentUser=requireAdmin();
+if(!currentUser)return;
 const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
 root.setAttribute('data-theme',savedTheme);
 document.getElementById('navUser').textContent=currentUser.full_name+' (Admin)';
 db=JSON.parse(localStorage.getItem('hp_db')||'{}');
 renderRequests(db.reservation_requests);
 }
-function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
-function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
 function renderRequests(list){
 const cont=document.getElementById('requestsTable');
-if(list.length===0){cont.innerHTML='<div class="empty-state"><p><b>No reservation requests.</b></p></div>';return;}
+if(!list||list.length===0){cont.innerHTML='<div class="empty-state"><p><b>No reservation requests.</b></p></div>';return;}
 cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead><tbody>'+list.map(r=>{
-const c=db.users.find(u=>u.id===r.client_id);
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
+const c=safeArr(db.users).find(u=>u.id===r.client_id);
+const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
 const testCount=r.test_ids?r.test_ids.length:0;
-return `<tr><td><b>#${r.id}</b></td><td>${c?c.full_name:'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td>${r.created_at}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequest('${r.id}')">Manage</button></td></tr>`;
+return `<tr><td><b>#${r.id}</b></td><td>${c?c.full_name:'�'}</td><td>${h?h.name:'�'}</td><td>${r.visit_date||'�'}</td><td>${testCount}</td><td>${r.created_at}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequest('${r.id}')">Manage</button></td></tr>`;
 }).join('')+'</tbody></table>';
 }
 function filterRequests(){
-const q=document.getElementById('searchReq').value.toLowerCase();
-const s=document.getElementById('statusFilter').value;
-const filtered=db.reservation_requests.filter(r=>{
-const c=db.users.find(u=>u.id===r.client_id);
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
+const q=document.getElementById('searchReq')?document.getElementById('searchReq').value.toLowerCase():'';
+const s=document.getElementById('statusFilter')?document.getElementById('statusFilter').value:'';
+const requests=safeArr(db.reservation_requests);
+const filtered=requests.filter(r=>{
+const c=safeArr(db.users).find(u=>u.id===r.client_id);
+const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
 const match=(!q||r.id.toLowerCase().includes(q)||(c&&c.full_name.toLowerCase().includes(q))||(h&&h.name.toLowerCase().includes(q)));
 const statusMatch=!s||r.status===s;
 return match&&statusMatch;

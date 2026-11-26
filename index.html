@@ -3,176 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Health Pathway - Home</title>
+<title>HealthPathway — Your Health Journey Starts Here</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+.hero{background:linear-gradient(135deg,var(--dark),var(--dark-soft));color:#fff;padding:120px 20px;text-align:center;position:relative;overflow:hidden;isolate}
+.hero::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 30% 40%,rgba(34,211,238,0.12),transparent 60%);pointer-events:none;z-index:0}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-size:3.5rem;font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px}
+.hero p{font-size:1.2rem;max-width:700px;margin:0 auto 40px;opacity:0.95;line-height:1.6}
+.hero .btn-group{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+.section{max-width:var(--max-width);margin:0 auto;padding:80px 20px}
+.section h2{text-align:center;font-size:2.2rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:16px}
+.sub{text-align:center;color:var(--muted);max-width:720px;margin:0 auto 56px;font-size:1.1rem}
+
+/* Feature Grid */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow);text-align:center;transition:all 0.3s}
+.feature-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover)}
+.feature-icon{width:64px;height:64px;background:var(--primary-soft);color:var(--primary);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.feature-icon svg{width:32px;height:32px}
+.feature-card h3{font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+.feature-card p{color:var(--text-soft);font-size:0.95rem;line-height:1.6}
+
+/* How it Works */
+.how-it-works{background:var(--border);padding:80px 20px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;max-width:var(--max-width);margin:0 auto}
+.step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 24px;text-align:center;position:relative}
+.step-num{width:40px;height:40px;background:var(--primary);color:#0b1320;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;margin:0 auto 16px}
+.step h4{font-size:1.1rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.step p{color:var(--text-soft);font-size:0.9rem;line-height:1.5}
+</style>
 </head>
 <body>
 <header class="site-header">
-<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="HealthPathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
 </svg>
-<span class="logo-text">Health Pathway</span>
+<span class="logo-text">HealthPathway</span>
 </div>
-<button class="btn ghost" id="langToggle" data-i18n="theme.toggle">EN / TL</button>
-<button class="btn ghost" id="themeToggle" data-i18n="theme.toggle">🌓 Theme</button>
-<a href="admin-login.html" class="btn" data-i18n="auth.login">Admin Login</a>
-</header>
 <nav class="nav-links" id="navLinks">
-<li><a href="client-dashboard.html" data-i18n="nav.dashboard">Information Dashboard</a></li>
-<li><a href="client-request.html" data-i18n="nav.request">Request Hospital Visit</a></li>
-<li><a href="admin-login.html" data-i18n="nav.admin">Admin Login</a></li>
+<ul style="display:flex;gap:4px;list-style:none;flex-wrap:wrap;margin:0;padding:0">
+<li><a href="index.html" class="active">Home</a></li>
+<li><a href="client-dashboard.html">Dashboard</a></li>
+<li><a href="admin-login.html">Admin Login</a></li>
+</ul>
 </nav>
+<button class="btn ghost" id="themeToggle">🌓 Theme</button>
+</header>
 
+<!-- HERO SECTION -->
 <section class="hero section visible">
-<h1 data-i18n="hero.title">Your Health Journey Starts Here.</h1>
-<p data-i18n="hero.subtitle">Explore common diseases, understand medical tests, compare estimated hospital prices, and prepare for your visit.</p>
-  <div class="btn-group">
-    <a href="main.html#diseases" class="btn" data-i18n="hero.diseases">Explore Diseases</a>
-    <a href="main.html#hospitals" class="btn secondary" data-i18n="hero.hospitals">Find Hospitals</a>
-    <a href="main.html#prices" class="btn secondary" data-i18n="hero.prices">View Test &amp; Prices</a>
-  </div>
+<h1>Your Health Journey Starts Here.</h1>
+<p>HealthPathway bridges the gap between patients and healthcare providers. We help you explore common diseases, understand medical tests, compare estimated hospital prices, and seamlessly prepare for your hospital visit — all in one secure platform.</p>
+<div class="btn-group">
+<a href="client-dashboard.html" class="btn" style="font-size:1.1rem;padding:16px 36px;">Enter Client Dashboard</a>
+</div>
 </section>
-<section class="section" id="home-selector" style="background:var(--border)">
-  <h2 data-i18n="selector.title">Select Hospital &amp; Disease</h2>
-  <div class="selector-grid">
-    <div class="selector-field">
-      <label data-i18n="selector.hospital">Select Hospital:</label>
-      <select id="homeHospital"></select>
-    </div>
-    <div class="selector-field">
-      <label data-i18n="selector.disease">Select Disease or Symptoms:</label>
-      <select id="homeDisease"></select>
-    </div>
-  </div>
-  <div id="homeDiseaseInfo"></div>
-  <div style="text-align:center;margin-top:16px">
-    <button class="btn" id="homeViewTests" data-i18n="selector.viewTests">View Related Tests &amp; Prices</button>
-  </div>
-</section>
+
+<!-- ABOUT US / FEATURES -->
 <section class="section">
-<h2 data-i18n="works.title">How HealthPathway Works</h2>
-<p class="sub" data-i18n="works.sub">Four simple steps to prepare for your visit with confidence.</p>
-<div class="steps">
-<div class="step"><div class="num">01</div><h3 data-i18n="step1.title">Search</h3><p data-i18n="step1.desc">Look up disease, test, or hospital.</p></div>
-<div class="step"><div class="num">02</div><h3 data-i18n="step2.title">Learn</h3><p data-i18n="step2.desc">Read symptoms and definitions.</p></div>
-<div class="step"><div class="num">03</div><h3 data-i18n="step3.title">Compare</h3><p data-i18n="step3.desc">Compare prices across hospitals.</p></div>
-<div class="step"><div class="num">04</div><h3 data-i18n="step4.title">Prepare</h3><p data-i18n="step4.desc">Review your visit checklist and documents.</p></div>
-</div>
-<div style="text-align:center;margin-top:28px">
-<a href="main.html#hospitals" class="btn ghost" data-i18n="works.cta.hospitals">Hospitals</a>
-<a href="main.html#diseases" class="btn ghost" data-i18n="works.cta.diseases">Diseases &amp; Symptoms</a>
-<a href="main.html#prices" class="btn ghost" data-i18n="works.cta.prices">Test &amp; Prices</a>
+<h2>Why Choose HealthPathway?</h2>
+<p class="sub">We simplify the often confusing process of navigating hospital visits, medical tests, and price estimates.</p>
+
+<div class="feature-grid">
+  <!-- Feature 1 -->
+  <div class="feature-card">
+    <div class="feature-icon">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+    </div>
+    <h3>Hospital Directory</h3>
+    <p>Browse trusted medical facilities in Valencia City. View their exact addresses, emergency room contacts, and landlines to plan your visit.</p>
+  </div>
+
+  <!-- Feature 2 -->
+  <div class="feature-card">
+    <div class="feature-icon">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+    </div>
+    <h3>Disease & Symptom Guide</h3>
+    <p>Understand 15 common diseases with clear definitions and comprehensive symptom lists. Educate yourself before consulting a doctor.</p>
+  </div>
+
+  <!-- Feature 3 -->
+  <div class="feature-card">
+    <div class="feature-icon">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+    <h3>Price Transparency</h3>
+    <p>Compare estimated medical test prices across 5 major hospitals. Request a quotation to get a clear, confirmed estimate before you go.</p>
+  </div>
 </div>
 </section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <h2>How It Works</h2>
+  <p class="sub">Three simple steps to prepare for your next hospital visit.</p>
+  
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Explore & Search</h4>
+      <p>Use our dashboard to look up symptoms, find hospitals, and check estimated test prices.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Request a Visit</h4>
+      <p>Select your preferred hospital, the tests you need, and submit a reservation request.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>Receive a Quotation</h4>
+      <p>Our administrators will review your request, calculate the costs, and send you an official quotation to accept.</p>
+    </div>
+  </div>
+</section>
+
 <footer>
 <div class="footer-grid">
 <div>
-<h4>Health Pathway</h4>
-<p data-i18n="footer.tagline">Navigating your health journey made easy — from symptoms to estimated costs.</p>
+<h4>HealthPathway</h4>
+<p>Navigating your health journey made easy — from symptoms to estimated costs.</p>
 </div>
 <div>
-<h4 data-i18n="footer.quickLinks">Quick Links</h4>
+<h4>Quick Links</h4>
 <ul>
-<li><a href="main.html#hospitals" data-i18n="nav.hospitals">Hospitals</a></li>
-<li><a href="main.html#prices" data-i18n="nav.prices">Test &amp; Prices</a></li>
-<li><a href="main.html#diseases" data-i18n="nav.diseases">Diseases &amp; Symptoms</a></li>
+<li><a href="client-dashboard.html">Client Dashboard</a></li>
+<li><a href="admin-login.html">Admin Portal</a></li>
 </ul>
 </div>
 <div>
-<h4 data-i18n="footer.visitPrep">Visit Prep</h4>
-<ul>
-<li>Valid ID</li>
-<li>Doctor's request</li>
-<li>Medical records</li>
-<li>PhilHealth info</li>
-</ul>
+<h4>Contact & Support</h4>
+<p>Valencia City, Bukidnon</p>
+<p>For medical emergencies, please call your local hospital's ER directly.</p>
 </div>
 </div>
-<p class="copyright" data-i18n="footer.copyright">© 2026 Health Pathway. All rights reserved.</p>
+<p class="copyright">© 2026 HealthPathway. All rights reserved.</p>
 </footer>
 
 <script>
-const t = {
-en: {
-  nav: {home:'Home',dashboard:'Information Dashboard',request:'Request Hospital Visit',admin:'Admin Login',login:'Admin Login'},
-  theme:{toggle:'🌓 Theme'},
-  auth:{login:'Admin Login'},
-  hero:{title:'Your Health Journey Starts Here.',subtitle:'Explore common diseases, understand medical tests, compare estimated hospital prices, and prepare for your visit.',diseases:'Explore Diseases',hospitals:'Find Hospitals',prices:'View Test & Prices'},
-  works:{title:'How HealthPathway Works',sub:'Four simple steps to prepare for your visit with confidence.',cta:{hospitals:'Hospitals',diseases:'Diseases & Symptoms',prices:'Test & Prices'}},
-  step1:{title:'Search',desc:'Look up disease, test, or hospital.'},
-  step2:{title:'Learn',desc:'Read symptoms and definitions.'},
-  step3:{title:'Compare',desc:'Compare prices across hospitals.'},
-  step4:{title:'Prepare',desc:'Review your visit checklist and documents.'},
-  selector:{title:'Select Hospital & Disease',hospital:'Select Hospital:',disease:'Select Disease or Symptoms:',viewTests:'View Related Tests & Prices',definition:'Definition:',symptoms:'Symptoms:'},
-  footer:{tagline:'Navigating your health journey made easy — from symptoms to estimated costs.',quickLinks:'Quick Links',visitPrep:'Visit Prep',copyright:'© 2026 Health Pathway. All rights reserved.'}
-},
-tl: {
-  nav: {home:'Bahay',dashboard:'Impormasyon Dashboard',request:'Mag-request ng Ospital',admin:'Admin Login',login:'Admin Login'},
-  theme:{toggle:'🌓 Tema'},
-  auth:{login:'Mag-log in'},
-  hero:{title:'Ang Iyong Lakbay sa Kalusugan Nagsisimula Dito.',subtitle:'Maaari mong pagsisiyahin ang mga karaniwang sakit, maunawaan ang mga uri ng medikal na test, ihambing ang mga estimadong presyo ng ospital, at maghanda para sa iyong bisita.',diseases:'Pagsisiyahin ang Mga Sakit',hospitals:'Hanapin ang Mga Ospital',prices:'Panoorin ang Mga Uri ng Test at Presyo'},
-  works:{title:'Paano Nagsisimula ang HealthPathway',sub:'Apat na simpleng hakbang upang maghanda nang may tiwasa sa iyong bisita.',cta:{hospitals:'Mga Ospital',diseases:'Mga Sakit at Sintomas',prices:'Mga Uri ng Test at Presyo'}},
-  step1:{title:'Maghanap',desc:'Maghanap ng sakit, test, o ospital.'},
-  step2:{title:'Matuto',desc:'Basahin ang mga sintomas at kahulugan.'},
-  step3:{title:'Hambingin',desc:'Ihambing ang mga presyo sa mga ospital.'},
-  step4:{title:'Maghanda',desc:'Suriin ang checklist ng iyong bisita at mga dokumento.'},
-  selector:{title:'Pumili ng Ospital at Sakit',hospital:'Pumili ng Ospital:',disease:'Pumili ng Sakit o mga Sintomas:',viewTests:'Panoorin ang Kaugnay na mga Test at Presyo',definition:'Kahulugan:',symptoms:'Mga Sintomas:'},
-  footer:{tagline:'Paglalakbay sa iyong kalusugan nang madaling — mula sa mga sintomas hanggang sa mga estimadong halaga.',quickLinks:'Mabilis na mga Link',visitPrep:'Pagiging Handang Bisita',copyright:'© 2026 Health Pathway. Lahat ng karapatan ay nakalaan.'}
-}
-};
-let lang = localStorage.getItem('lang') || 'en';
-function setLang(l){lang=l;localStorage.setItem('lang',l);document.documentElement.lang=l;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');const parts=k.split('.');let val=t[lang];for(const p of parts){if(!val||!(p in val))break;val=val[p];}if(typeof val==='string'){if(el.tagName==='INPUT'&&el.placeholder)el.placeholder=val;else el.textContent=val;}});const lt=document.getElementById('langToggle');if(lt)lt.textContent=lang==='en'?'EN / TL':'TL / EN';}
-document.getElementById('langToggle').addEventListener('click',()=>setLang(lang==='en'?'tl':'en'));
-setLang(lang);
-let homeHospitals=[],homeDiseases=[];
-async function initHomeData(){
-const res=await fetch('data.json');
-const json=await res.json();
-homeHospitals=json.hospitals;
-homeDiseases=json.diseases;
-renderHomeSelectors();
-}
-function renderHomeSelectors(){
-const hs=document.getElementById('homeHospital');
-const ds=document.getElementById('homeDisease');
-hs.innerHTML='<option value="">-- Choose a hospital --</option>';
-ds.innerHTML='<option value="">-- Choose a disease or symptom --</option>';
-homeHospitals.forEach(h=>{const o=document.createElement('option');o.value=h.name;o.textContent=h.name;hs.appendChild(o);});
-homeDiseases.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.name;ds.appendChild(o);});
-ds.addEventListener('change',()=>{
-const info=document.getElementById('homeDiseaseInfo');
-const id=ds.value;
-if(!id){info.innerHTML='';return;}
-const d=homeDiseases.find(x=>x.id===id);
-const sym=d.symptoms.map(s=>'<li>'+s+'</li>').join('');
-const defLabel=lang==='tl'?'Kahulugan:':'Definition:';
-const symLabel=lang==='tl'?'Mga Sintomas:':'Symptoms:';
-info.innerHTML=`<div class="card"><h3>${d.name}</h3><p><strong>${defLabel}</strong> ${d.def}</p><p><strong>${symLabel}</strong></p><ul>${sym}</ul></div>`;
-});
-document.getElementById('homeViewTests').onclick=()=>{
-const h=hs.value;
-if(!h){alert('Please select a hospital first.');return;}
-localStorage.setItem('hospital',h);
-location.href='main.html#prices';
-};
-}
-initHomeData();
 const themeBtn=document.getElementById('themeToggle');
 const root=document.documentElement;
-const savedTheme=localStorage.getItem('theme')||'dark';
-if(savedTheme)root.setAttribute('data-theme',savedTheme);
+root.setAttribute('data-theme',localStorage.getItem('theme')||'dark');
 themeBtn.addEventListener('click',()=>{
 const isDark=root.getAttribute('data-theme')==='dark';
 root.setAttribute('data-theme',isDark?'light':'dark');
 localStorage.setItem('theme',isDark?'light':'dark');
 });
-const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.12});
-document.querySelectorAll('section').forEach(s=>observer.observe(s));
 </script>
 </body>
 </html>

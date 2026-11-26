@@ -8,47 +8,41 @@
 <link rel="stylesheet" href="styles.css">
 <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
-.request-layout{display:grid;grid-template-columns:1fr 340px;gap:30px}
-.card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
-.card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 20px 0;color:var(--text)}
-.form-group{margin-bottom:18px}
+.request-layout{display:grid;grid-template-columns:1fr 340px;gap:30px;margin-top:20px}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow)}
+.form-card h2{font-size:1.75rem;font-weight:800;margin:0 0 16px 0;letter-spacing:-0.5px}
+.form-card p{color:var(--muted);font-size:0.95rem;margin-bottom:24px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:0.9rem;font-weight:600;color:var(--text-soft);margin-bottom:6px}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;font:inherit;background:var(--card);color:var(--text);box-sizing:border-box}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
-.form-group textarea{min-height:100px;resize:vertical}
-.test-checkboxes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.test-item{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer}
-.test-item input{width:18px;height:18px;accent-color:var(--primary)}
-.test-item span{font-size:0.9rem;color:var(--text)}
+.full-width{grid-column:1/-1}
+.tests-section{margin-top:24px}
+.tests-section h3{font-size:1.1rem;font-weight:700;margin:0 0 12px 0;color:var(--text)}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.test-item{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;transition:all 0.2s}
+.test-item:hover{border-color:var(--primary);background:var(--primary-soft)}
+.test-item input{width:18px;height:18px;margin:0;accent-color:var(--primary)}
+.test-item .test-name{flex:1;font-weight:600;color:var(--text)}
+.test-item .test-price{font-size:0.85rem;color:var(--muted);font-weight:600}
 .test-item.selected{border-color:var(--primary);background:var(--primary-soft)}
-.price-badge{font-size:0.8rem;color:var(--muted);font-weight:500;margin-left:auto}
-.price-awaiting{color:#dc2626;font-weight:600}
-.btn-submit{background:var(--primary);color:#0b1320;width:100%;padding:16px;border-radius:12px;font-weight:800;font-size:1.1rem;border:none;cursor:pointer;box-shadow:0 4px 12px -4px rgba(34,211,238,0.35);margin-top:12px}
+.sidebar-summary{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);position:sticky;top:20px}
+.sidebar-summary h3{font-size:1.1rem;font-weight:700;margin:0 0 16px 0;color:var(--text)}
+.summary-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.summary-item:last-child{border-bottom:none}
+.summary-item .label{color:var(--text-soft);font-size:0.85rem}
+.summary-item .value{font-weight:700;color:var(--text)}
+.summary-total{font-size:1.4rem;font-weight:800;color:var(--primary);margin-top:16px;padding-top:16px;border-top:2px solid var(--border)}
+.btn-submit{background:var(--primary);color:#0b1320;width:100%;padding:16px;border-radius:12px;font-weight:800;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 12px -4px rgba(34,211,238,0.35);margin-top:24px}
 .btn-submit:hover{background:var(--primary-hover);transform:translateY(-2px)}
 .btn-submit:disabled{opacity:0.6;cursor:not-allowed}
-.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);position:sticky;top:20px}
-.sidebar-card h4{font-size:1rem;font-weight:700;margin:0 0 16px 0;color:var(--text)}
-.price-list{border:1px solid var(--border);border-radius:12px;padding:16px;max-height:400px;overflow-y:auto}
-.price-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.9rem}
-.price-item:last-child{border-bottom:none}
-.price-item .test-name{color:var(--text)}
-.price-item .test-price{font-weight:700;color:var(--primary)}
-.price-item .price-awaiting{color:#dc2626}
-.empty-price{text-align:center;color:var(--muted);font-size:0.85rem;padding:20px}
-.total-box{background:var(--primary-soft);border-radius:12px;padding:16px;margin-top:16px}
-.total-box .total-label{font-size:0.85rem;color:#0b1320}
-.total-box .total-value{font-size:1.75rem;font-weight:800;color:#0b1320}
-.success-banner{background:#dcfce7;border:1px solid #86efac;border-radius:12px;padding:20px;color:#166534;margin-bottom:24px}
-.success-banner h3{margin:0 0 8px 0;font-size:1.1rem}
-.success-banner p{margin:0;font-size:0.9rem}
-.error-msg{color:#dc2626;font-size:0.85rem;display:none;margin-top:8px}
-@media (max-width:900px){.request-layout{grid-template-columns:1fr}}
-.required::after{content:" *";color:#dc2626}
+@media (max-width:768px){.request-layout{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,272 +57,267 @@
 </div>
 </header>
 
+<main style="padding:40px">
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px">Request Hospital Visit</h1>
+<p style="color:var(--muted);margin:0 0 32px 0">Fill in your details and select your preferred hospital, disease/symptoms, and required medical tests.</p>
+
 <div class="request-layout">
-<div class="main-content">
-<div id="successBanner" class="success-banner" style="display:none">
-<h3>Request Submitted Successfully</h3>
-<p id="successMsg">Your hospital visit request has been submitted.</p>
-</div>
+<div class="form-card">
+<h2>Visit Request</h2>
+<p>Your information will be sent to the selected hospital for review and quotation.</p>
 
-<div class="card-section">
-<h3>Reservation Request Form</h3>
 <form id="requestForm">
-
-<!-- Personal Information Section -->
-<div class="personal-info">
-<h3 style="margin-top:0">Personal Information</h3>
-<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">Please provide your details below.</p>
+<div class="form-grid">
 <div class="form-group">
-<label class="required">Full Name</label>
-<input type="text" id="piFullName" placeholder="Juan Dela Cruz" required>
+<label for="clientName">Full Name <span class="required">*</span></label>
+<input type="text" id="clientName" placeholder="Juan Dela Cruz" required>
 </div>
 <div class="form-group">
-<label class="required">Age / Date of Birth</label>
-<input type="date" id="piDob" required>
+<label for="clientContact">Contact Number <span class="required">*</span></label>
+<input type="tel" id="clientContact" placeholder="09123456789" required>
 </div>
 <div class="form-group">
-<label class="required">Gender</label>
-<select id="piGender" required>
+<label for="clientEmail">Email Address</label>
+<input type="email" id="clientEmail" placeholder="juan@example.com">
+</div>
+<div class="form-group full-width">
+<label for="clientAddress">Address</label>
+<input type="text" id="clientAddress" placeholder="Purok 1, Brgy. Sample, Valencia City">
+</div>
+<div class="form-group">
+<label for="clientDob">Date of Birth</label>
+<input type="date" id="clientDob">
+</div>
+<div class="form-group">
+<label for="clientGender">Gender</label>
+<select id="clientGender">
 <option value="">Select gender</option>
 <option value="Male">Male</option>
 <option value="Female">Female</option>
 <option value="Other">Other</option>
 </select>
 </div>
-<div class="form-group">
-<label class="required">Contact Number</label>
-<input type="tel" id="piContact" placeholder="09123456789" required>
-</div>
-<div class="form-group">
-<label class="required">Email Address</label>
-<input type="email" id="piEmail" placeholder="juan@example.com" required>
-</div>
-<div class="form-group">
-<label class="required">Home Address</label>
-<textarea id="piAddress" placeholder="Street, Barangay, City, Province" required></textarea>
-</div>
+
+<div class="form-group full-width">
+<label for="reqHospital">Select Hospital <span class="required">*</span></label>
+<select id="reqHospital" required onchange="loadHospitalTests()">
+<option value="">-- Choose a hospital --</option>
+</select>
 </div>
 
-<!-- Hospital / Visit Details -->
-<div class="form-group">
-<label class="required">Preferred Hospital</label>
-<select id="reqHospital" required onchange="loadHospitalTests()">
-<option value="">Select a hospital</option>
+<div class="form-group full-width">
+<label for="reqDisease">Disease / Symptoms <span class="required">*</span></label>
+<select id="reqDisease" required>
+<option value="">-- Choose a disease --</option>
 </select>
 </div>
-<div class="form-group">
-<label class="required">Preferred Visit Date</label>
-<input type="date" id="reqDate" required>
+
+<div class="tests-section full-width">
+<h3>Select Medical Tests</h3>
+<p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px">Prices shown are for your selected hospital.</p>
+<div id="testsContainer" class="test-grid"></div>
 </div>
+
 <div class="form-group">
-<label class="required">Preferred Visit Time</label>
-<select id="reqTime" required>
-<option value="">Select time</option>
-<option value="08:00">8:00 AM</option>
-<option value="09:00">9:00 AM</option>
-<option value="10:00">10:00 AM</option>
-<option value="11:00">11:00 AM</option>
-<option value="13:00">1:00 PM</option>
-<option value="14:00">2:00 PM</option>
-<option value="15:00">3:00 PM</option>
-<option value="16:00">4:00 PM</option>
-</select>
-</div>
-<div class="form-group disease-select">
-<label>Selected Disease or Symptoms (Optional)</label>
-<select id="reqDisease" onchange="filterTestsByDisease()">
-<option value="">Select disease/symptoms</option>
-</select>
-<p style="font-size:0.85rem;color:var(--muted);margin-top:6px">Filter available tests by disease (optional).</p>
+<label for="visitDate">Visit Date <span class="required">*</span></label>
+<input type="date" id="visitDate" required>
 </div>
 <div class="form-group">
-<label class="required">Requested Medical Tests</label>
-<div class="test-checkboxes" id="testsContainer"></div>
+<label for="visitTime">Visit Time <span class="required">*</span></label>
+<input type="time" id="visitTime" required>
 </div>
-<div class="form-group">
-<label>Additional Notes</label>
-<textarea id="reqNotes" placeholder="Any additional information for the hospital..."></textarea>
+<div class="form-group full-width">
+<label for="reqNotes">Additional Notes</label>
+<textarea id="reqNotes" placeholder="Any special requests or additional information..."></textarea>
 </div>
-<p id="formError" class="error-msg">Please fill in all required fields and select at least one test.</p>
-<button type="submit" class="btn-submit" id="submitBtn">Submit Request</button>
+
+<button type="submit" class="btn-submit" id="submitBtn">Submit Visit Request</button>
+</div>
 </form>
 </div>
-</div>
 
-<aside class="sidebar-card">
-<h4>Available Test Prices</h4>
-<p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px">Select a hospital to view test prices.</p>
-<div id="priceList" class="price-list"><div class="empty-price">No hospital selected.</div></div>
-<div class="total-box">
-<div class="total-label">Estimated Total (Selected Tests)</div>
-<div class="total-value" id="estimatedTotal">₱0.00</div>
-</div>
+<aside class="sidebar-summary">
+<h3>Request Summary</h3>
+<div class="summary-item"><span class="label">Hospital</span><span class="value" id="sumHospital">—</span></div>
+<div class="summary-item"><span class="label">Disease</span><span class="value" id="sumDisease">—</span></div>
+<div class="summary-item"><span class="label">Tests Selected</span><span class="value" id="sumTestCount">0</span></div>
+<div class="summary-item"><span class="label">Visit Date</span><span class="value" id="sumDate">—</span></div>
+<div class="summary-total" id="sumTotal">Estimated Total: ₱0</div>
+<p style="color:var(--muted);font-size:0.8rem;margin-top:12px">Prices are estimates and may change. Confirm with the hospital.</p>
 </aside>
 </div>
+</main>
 
 <script>
-let db=JSON.parse(localStorage.getItem('hp_db'));
-if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+function requireClient(){
+let cid=localStorage.getItem('hp_client_id');
+if(!cid){cid='client-001';localStorage.setItem('hp_client_id',cid);}
+return {id:cid,full_name:'Guest Client',email:'',role:'client'};
+}
+function uuid(){return (typeof crypto!=='undefined'&&crypto.randomUUID)?crypto.randomUUID():('id-'+Date.now()+'-'+Math.floor(Math.random()*10000));}
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
 
+let db=JSON.parse(localStorage.getItem('hp_db'));
 let currentUser=null;
-let selectedHospitalId=null;
+let selectedHospitalId='';
 let selectedTests=new Set();
-let allTests=[];
+
+if(!db){
+  fetch('data.json').then(r=>r.json()).then(d=>{
+    localStorage.setItem('hp_db',JSON.stringify(d));
+    db=d;
+    initPage();
+  }).catch(err => {
+    console.error("Failed to load data.json. Are you using Live Server?", err);
+  });
+} else {
+  initPage();
+}
 
 function initPage(){
-const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
-root.setAttribute('data-theme',savedTheme);
-let clientId=localStorage.getItem('hp_client_id');
-if(!clientId){
-clientId='client-001';
-localStorage.setItem('hp_client_id',clientId);
-}
-currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
-document.getElementById('navUser').textContent='Client ('+clientId+')';
-db=JSON.parse(localStorage.getItem('hp_db')||'{}');
-allTests=db.medical_tests;
-const minDate=new Date().toISOString().split('T')[0];
-document.getElementById('reqDate').min=minDate;
-loadHospitals();
-loadDiseases();
-renderTests();
+  currentUser=requireClient();
+  
+  // Changed to Guest User
+  document.getElementById('navUser').textContent='Guest User';
+  
+  const root=document.documentElement;
+  const savedTheme=localStorage.getItem('theme')||'dark';
+  root.setAttribute('data-theme',savedTheme);
+  db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+  
+  renderHospitals();
+  renderDiseases();
+  loadHospitalTests();
+
+  const themeBtn=document.getElementById('themeToggle');
+  if(themeBtn){
+    themeBtn.addEventListener('click',()=>{
+      const isDark=root.getAttribute('data-theme')==='dark';
+      root.setAttribute('data-theme',isDark?'light':'dark');
+      localStorage.setItem('theme',isDark?'light':'dark');
+    });
+  }
 }
 
 function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
 function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
 
-function loadHospitals(){
-const sel=document.getElementById('reqHospital');
-sel.innerHTML='<option value="">Select a hospital</option>';
-db.hospitals.filter(h=>h.available).forEach(h=>{
-sel.innerHTML+=`<option value="${h.id}">${h.name}</option>`;
-});
+function renderHospitals(){
+  const sel=document.getElementById('reqHospital');
+  sel.innerHTML='<option value="">-- Choose a hospital --</option>';
+  safeArr(db.hospitals).forEach(h=>{
+    if(h.available!==false){
+      const o=document.createElement('option');
+      o.value=h.id;
+      o.textContent=h.name;
+      sel.appendChild(o);
+    }
+  });
 }
 
-function loadDiseases(){
-const sel=document.getElementById('reqDisease');
-sel.innerHTML='<option value="">Select disease/symptoms</option>';
-db.diseases.forEach(d=>{
-sel.innerHTML+=`<option value="${d.id}">${d.name}</option>`;
-});
+function renderDiseases(){
+  const sel=document.getElementById('reqDisease');
+  sel.innerHTML='<option value="">-- Choose a disease --</option>';
+  safeArr(db.diseases).forEach(d=>{
+    const o=document.createElement('option');
+    o.value=d.id;
+    o.textContent=d.name;
+    sel.appendChild(o);
+  });
 }
 
 function loadHospitalTests(){
-selectedHospitalId=document.getElementById('reqHospital').value;
-selectedTests.clear();
-renderTests();
-renderPriceList();
-}
-
-function filterTestsByDisease(){
-renderTests();
-renderPriceList();
+  selectedHospitalId=document.getElementById('reqHospital').value;
+  selectedTests.clear();
+  renderTests();
+  renderSummary();
 }
 
 function renderTests(){
-const cont=document.getElementById('testsContainer');
-const diseaseId=document.getElementById('reqDisease').value;
-let testsToShow=allTests;
-if(diseaseId){
-testsToShow=allTests;
-}
-cont.innerHTML=testsToShow.map(t=>{
-const isSelected=selectedTests.has(t.id);
-const price=getTestPrice(t.id);
-const priceHtml=price!==null?`<span class="price-badge">₱${price.toLocaleString()}</span>`:`<span class="price-badge price-awaiting">Awaiting Admin Quotation</span>`;
-return `<div class="test-item ${isSelected?'selected':''}" onclick="toggleTest('${t.id}')"><input type="checkbox" ${isSelected?'checked':''} onchange="toggleTest('${t.id}',this.checked)" style="pointer-events:none"><span>${t.name}</span>${priceHtml}</div>`;
-}).join('');
-}
+  const cont=document.getElementById('testsContainer');
+  let testsToShow=safeArr(db.medical_tests);
+  
+  if(testsToShow.length === 0){
+    cont.innerHTML='<p style="color:var(--muted)">No tests available.</p>';
+    return;
+  }
 
-function toggleTest(id,checked){
-if(checked===undefined){checked=!selectedTests.has(id);}
-if(checked){selectedTests.add(id);}else{selectedTests.delete(id);}
-renderTests();
-renderPriceList();
-updateEstimatedTotal();
+  cont.innerHTML=testsToShow.map(t=>{
+    const isSelected=selectedTests.has(t.id);
+    const price=getTestPrice(t.id);
+    const priceHtml=price!==null?`<span class="test-price">₱${price.toLocaleString()}</span>`:`<span class="test-price">Awaiting quotation</span>`;
+    return `<div class="test-item ${isSelected?'selected':''}" onclick="toggleTest('${t.id}')"><input type="checkbox" ${isSelected?'checked':''} onchange="toggleTest('${t.id}',this.checked)" style="pointer-events:none"><span class="test-name">${t.name}</span>${priceHtml}</div>`;
+  }).join('');
+  renderSummary();
 }
 
 function getTestPrice(tid){
-if(!selectedHospitalId)return null;
-const prices=db.hospital_test_prices[selectedHospitalId];
-if(!prices)return null;
-return prices[tid]!==undefined?prices[tid]:null;
+  if(!selectedHospitalId)return null;
+  const h=safeArr(db.hospitals).find(h=>h.id===selectedHospitalId);
+  if(!h)return null;
+  const prices=safeObj(db.hospital_test_prices)[h.id];
+  if(!prices)return null;
+  return prices[tid]!==undefined?prices[tid]:null;
 }
 
-function renderPriceList(){
-const cont=document.getElementById('priceList');
-if(!selectedHospitalId){cont.innerHTML='<div class="empty-price">No hospital selected.</div>';return;}
-const prices=db.hospital_test_prices[selectedHospitalId];
-let html='';
-allTests.forEach(t=>{
-const price=getTestPrice(t.id);
-const selected=selectedTests.has(t.id);
-html+=`<div class="price-item ${selected?'selected':''}"><span class="test-name">${t.name}</span><span class="test-price ${price===null?'price-awaiting':''}">${price!==null?'₱'+price.toLocaleString():'Awaiting Admin Quotation'}</span></div>`;
-});
-cont.innerHTML=html;
+function toggleTest(id,checked){
+  if(checked===undefined){checked=!selectedTests.has(id);}
+  if(checked){selectedTests.add(id);}else{selectedTests.delete(id);}
+  renderTests();
+  renderSummary();
 }
 
-function updateEstimatedTotal(){
-let total=0;
-selectedTests.forEach(tid=>{
-const p=getTestPrice(tid);
-if(p!==null)total+=p;
-});
-document.getElementById('estimatedTotal').textContent='₱'+total.toLocaleString();
+function renderSummary(){
+  const h=safeArr(db.hospitals).find(h=>h.id===selectedHospitalId);
+  document.getElementById('sumHospital').textContent=h?h.name:'—';
+  const d=safeArr(db.diseases).find(d=>d.id===document.getElementById('reqDisease').value);
+  document.getElementById('sumDisease').textContent=d?d.name:'—';
+  document.getElementById('sumTestCount').textContent=selectedTests.size;
+  let total=0;
+  selectedTests.forEach(tid=>{
+    const p=getTestPrice(tid);
+    if(p!==null)total+=p;
+  });
+  document.getElementById('sumTotal').textContent='Estimated Total: ₱'+total.toLocaleString();
+  document.getElementById('sumDate').textContent=document.getElementById('visitDate').value||'—';
 }
+
+document.getElementById('reqDisease').addEventListener('change',renderSummary);
+document.getElementById('visitDate').addEventListener('change',renderSummary);
+document.getElementById('visitTime').addEventListener('change',renderSummary);
 
 document.getElementById('requestForm').addEventListener('submit',(e)=>{
-e.preventDefault();
-const piFullName=document.getElementById('piFullName').value.trim();
-const piDob=document.getElementById('piDob').value;
-const piGender=document.getElementById('piGender').value;
-const piContact=document.getElementById('piContact').value.trim();
-const piEmail=document.getElementById('piEmail').value.trim();
-const piAddress=document.getElementById('piAddress').value.trim();
-const date=document.getElementById('reqDate').value;
-const time=document.getElementById('reqTime').value;
-const disease=document.getElementById('reqDisease').value;
-const notes=document.getElementById('reqNotes').value.trim();
-const err=document.getElementById('formError');
-const btn=document.getElementById('submitBtn');
-if(!piFullName||!piDob||!piGender||!piContact||!piEmail||!piAddress||!date||!time||selectedTests.size===0){err.style.display='block';return;}
-err.style.display='none';
-btn.textContent='Submitting...';
-const d=getDb();
-const requestId='R-'+Date.now();
-const request={
-id:requestId,
-client_id:currentUser.id,
-client_name:piFullName,
-client_dob:piDob,
-client_gender:piGender,
-client_contact:piContact,
-client_email:piEmail,
-client_address:piAddress,
-hospital_id:selectedHospitalId,
-visit_date:date,
-visit_time:time,
-disease_id:disease||null,
-test_ids:[...selectedTests],
-notes:notes,
-status:'pending',
-created_at:new Date().toISOString()
-};
-d.reservation_requests.push(request);
-d.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'New client request #'+requestId+' from '+piFullName,read:false,created_at:new Date().toISOString()});
-saveDb(d);
-btn.textContent='Submitted!';
-document.getElementById('successBanner').style.display='block';
-document.getElementById('successMsg').textContent='Your hospital visit request #'+requestId+' has been submitted with status: Pending.';
-setTimeout(()=>{window.location.href='client-dashboard.html';},1500);
-});
-
-const themeBtn=document.getElementById('themeToggle');
-const root=document.documentElement;
-themeBtn.addEventListener('click',()=>{
-const isDark=root.getAttribute('data-theme')==='dark';
-root.setAttribute('data-theme',isDark?'light':'dark');
-localStorage.setItem('theme',isDark?'light':'dark');
+  e.preventDefault();
+  const btn=document.getElementById('submitBtn');
+  btn.textContent='Submitting...';btn.disabled=true;
+  const h=safeArr(db.hospitals).find(h=>h.id===selectedHospitalId);
+  const request={
+    id:'R-'+Date.now(),
+    client_id:currentUser.id,
+    client_name:document.getElementById('clientName').value.trim(),
+    client_contact:document.getElementById('clientContact').value.trim(),
+    client_email:document.getElementById('clientEmail').value.trim(),
+    client_address:document.getElementById('clientAddress').value.trim(),
+    client_dob:document.getElementById('clientDob').value,
+    client_gender:document.getElementById('clientGender').value,
+    hospital_id:selectedHospitalId,
+    disease_id:document.getElementById('reqDisease').value,
+    test_ids:[...selectedTests],
+    visit_date:document.getElementById('visitDate').value,
+    visit_time:document.getElementById('visitTime').value,
+    notes:document.getElementById('reqNotes').value.trim(),
+    status:'pending',
+    created_at:new Date().toISOString()
+  };
+  const d=getDb();
+  d.reservation_requests=safeArr(d.reservation_requests);
+  d.reservation_requests.push(request);
+  d.notifications=safeArr(d.notifications);
+  d.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'New reservation request #'+request.id+' from '+request.client_name,read:false,created_at:new Date().toISOString()});
+  saveDb(d);
+  alert('Visit request submitted successfully! Request #'+request.id);
+  window.location.href='client-dashboard.html';
 });
 </script>
 </body>

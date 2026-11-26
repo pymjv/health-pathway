@@ -10,12 +10,12 @@
 <style>
 .admin-layout{display:grid;grid-template-columns:260px 1fr;gap:0}
 .admin-sidebar{position:sticky;top:0;height:100vh;background:var(--dark);color:#fff;padding:24px;border-right:1px solid var(--border)}
-.admin-sidebar .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.admin-sidebar .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;cursor:pointer}
 .admin-sidebar .logo-mark{width:30px;height:30px}
 .admin-sidebar .logo-text{color:#fff;font-weight:800;font-size:1.1rem}
 .admin-sidebar nav ul{list-style:none;padding:0}
 .admin-sidebar nav li{margin:10px 0}
-.admin-sidebar nav a{color:var(--muted);text-decoration:none;font-weight:500;padding:10px 12px;border-radius:10px;display:block;transition:all 0.2s}
+.admin-sidebar nav a{color:var(--muted);text-decoration:none;font-weight:500;padding:10px 12px;border-radius:10px;display:block;transition:all 0.2s;cursor:pointer}
 .admin-sidebar nav a:hover,.admin-sidebar nav a.active{background:var(--primary);color:#0b1320}
 .admin-sidebar .user-info{margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85rem;color:var(--muted)}
 .admin-main{padding:40px;overflow-y:auto}
@@ -23,32 +23,8 @@
 .page-header h1{font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px}
 .page-header p{color:var(--muted);margin:0}
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:32px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
-.stat-card .stat-value{font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:4px}
-.stat-card .stat-label{color:var(--muted);font-size:0.9rem}
-.card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
-.card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 20px 0;color:var(--text)}
 .btn-admin{background:var(--primary);color:#0b1320;padding:10px 20px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
 .btn-admin:hover{background:var(--primary-hover)}
-.btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
-.btn-sm.primary{background:var(--primary);color:#0b1320}
-.btn-sm.secondary{background:transparent;color:var(--primary);border:1px solid var(--primary)}
-.btn-sm.danger{background:#fee2e2;color:#dc2626}
-.table{width:100%;border-collapse:collapse;font-size:0.9rem}
-.table th, .table td{padding:12px 8px;border-bottom:1px solid var(--border);text-align:left}
-.table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.4px}
-.table tr:hover td{background:rgba(34,211,238,0.03)}
-.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
-.status-pending{background:#fef3c7;color:#92400e}
-.status-review{background:#dbeafe;color:#1e40af}
-.status-quoted{background:#dcfce7;color:#166534}
-.status-accepted{background:#bfdbfe;color:#1d4ed8}
-.status-confirmed{background:#cffafe;color:#089190}
-.status-cancelled{background:#fee2e2;color:#991b1b}
-.filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:end}
-.filter-bar input,.filter-bar select{padding:10px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text)}
-.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
-.empty-state b{color:var(--text)}
 .quote-form{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px}
 .quote-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .quote-form input,.quote-form select,.quote-form textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text)}
@@ -58,7 +34,7 @@
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -67,7 +43,7 @@
 <span class="logo-text">Health Pathway</span>
 </div>
 <div class="header-actions" style="display:flex;align-items:center;gap:12px">
-<a href="admin-dashboard.html" class="btn ghost" style="margin-right:8px">Home</a>
+<a href="admin-dashboard.html" class="btn ghost" style="margin-right:8px">Dashboard</a>
 <button class="btn secondary" onclick="logout()" style="margin-right:8px">Logout</button>
 <span id="navUser" style="color:var(--text-soft);font-size:0.9rem"></span>
 <button class="btn ghost" id="themeToggle">🌓 Theme</button>
@@ -76,7 +52,7 @@
 
 <div class="admin-layout">
 <aside class="admin-sidebar">
-<div class="logo">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,10 +62,10 @@
 </div>
 <nav>
 <ul>
-<li><a href="admin-dashboard.html" class="nav-link active">Dashboard</a></li>
-<li><a href="#" onclick="showSection('requests')" class="nav-link">Manage Requests</a></li>
-<li><a href="#" onclick="showSection('quotations')" class="nav-link">Quotations</a></li>
-<li><a href="#" onclick="showSection('visits')" class="nav-link">Visit Management</a></li>
+<li><a class="nav-link active" onclick="showSection('dashboard', this)">Dashboard</a></li>
+<li><a class="nav-link" onclick="showSection('requests', this)">Manage Requests</a></li>
+<li><a class="nav-link" onclick="showSection('quotations', this)">Quotations</a></li>
+<li><a href="admin-data-management.html" class="nav-link">Data Management</a></li>
 </ul>
 </nav>
 <div class="user-info" id="sidebarUser"></div>
@@ -135,232 +111,137 @@
 <div id="quotationsList"></div>
 </div>
 
-<!-- Visit Management Section -->
-<div id="section-visits" style="display:none">
-<h3>Visit Management</h3>
-<p style="color:var(--muted);margin-bottom:20px">Manage confirmed client visits and checklists.</p>
-<div id="visitsList"></div>
-</div>
-
 </main>
 </div>
 
 <script>
-let db=JSON.parse(localStorage.getItem('hp_db'));
-if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
-
-let currentUser=null;
-function initPage(){
-const u=localStorage.getItem('isAdmin');
-if(u!=='true'){window.location.href='admin-login.html';return;}
-const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
-root.setAttribute('data-theme',savedTheme);
-document.getElementById('navUser').textContent='Administrator · Admin';
-document.getElementById('sidebarUser').textContent='Administrator · Admin';
-db=JSON.parse(localStorage.getItem('hp_db')||'{}');
-renderDashboard();
-}
-
+function newId(p){return (crypto.randomUUID? p+'-'+crypto.randomUUID() : p+'-'+Date.now()+'-'+Math.floor(Math.random()*1e6));}
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
 function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
-function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
-
-function renderDashboard(){
-const clients=db.users?db.users.filter(u=>u.role==='client'):[];
-const requests=db.reservation_requests||[];
-document.getElementById('statClients').textContent=clients.length;
-document.getElementById('statRequests').textContent=requests.length;
-document.getElementById('statPending').textContent=requests.filter(r=>r.status==='pending').length;
-document.getElementById('statQuoted').textContent=requests.filter(r=>r.status==='quoted').length;
-document.getElementById('statConfirmed').textContent=requests.filter(r=>r.status==='confirmed').length;
-
-const recent=[...requests].reverse().slice(0,5);
-const cont=document.getElementById('recentRequests');
-if(recent.length===0){cont.innerHTML='<div class="empty-state"><p><b>No requests yet.</b></p></div>';return;}
-cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Hospital</th><th>Status</th><th>Action</th></tr></thead><tbody>'+recent.map(r=>{
-const c=db.users.find(u=>u.id===r.client_id);
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||(c?c.full_name:'—')}</td><td>${h?h.name:'—'}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequest('${r.id}')">Manage</button></td></tr>`;
-}).join('')+'</tbody></table>';
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));}
+function requireAdmin(){
+const u=localStorage.getItem('hp_user');
+if(!u){window.location.href='admin-login.html';return null;}
+try{const cu=JSON.parse(u);if(cu.role!=='admin'){window.location.href='admin-login.html';return null;}}catch(e){window.location.href='admin-login.html';return null;}
+return JSON.parse(u);
 }
-
-function showSection(section){
-document.querySelectorAll('[id^="section-"]').forEach(s=>s.style.display='none');
-document.getElementById('section-'+section).style.display='block';
-const titles={'requests':'Reservation Management','quotations':'Quotation Management','visits':'Visit Management','dashboard':'Admin Dashboard'};
-document.querySelector('#pageHeader h1').textContent=titles[section]||'Admin Dashboard';
-document.querySelectorAll('.nav-link').forEach(a=>a.classList.remove('active'));
-event.target.classList.add('active');
-
-if(section==='requests'){renderRequestsTable();}
-else if(section==='quotations'){renderQuotationsAdmin();}
-else if(section==='visits'){renderVisitsAdmin();}
-}
-
-function renderRequestsTable(){
-const cont=document.getElementById('adminRequestsTable');
-const requests=db.reservation_requests||[];
-if(requests.length===0){cont.innerHTML='<div class="empty-state"><p><b>No reservation requests.</b></p></div>';return;}
-cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Contact</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Status</th><th>Action</th></tr></thead><tbody>'+requests.map(r=>{
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const testCount=r.test_ids?r.test_ids.length:0;
-return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||'—'}</td><td>${r.client_contact||'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequestDetail('${r.id}')">View Details</button></td></tr>`;
-}).join('')+'</tbody></table>';
-}
-
-function filterRequests(){
-const q=document.getElementById('searchReq').value.toLowerCase();
-const s=document.getElementById('statusFilter').value;
-const requests=db.reservation_requests||[];
-const filtered=requests.filter(r=>{
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const match=(!q||r.id.toLowerCase().includes(q)||(r.client_name&&r.client_name.toLowerCase().includes(q))||(h&&h.name.toLowerCase().includes(q)));
-const statusMatch=!s||r.status===s;
-return match&&statusMatch;
-});
-const cont=document.getElementById('adminRequestsTable');
-if(filtered.length===0){cont.innerHTML='<div class="empty-state"><p><b>No matching requests.</b></p></div>';return;}
-cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Contact</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Status</th><th>Action</th></tr></thead><tbody>'+filtered.map(r=>{
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const testCount=r.test_ids?r.test_ids.length:0;
-return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||'—'}</td><td>${r.client_contact||'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequestDetail('${r.id}')">View Details</button></td></tr>`;
-}).join('')+'</tbody></table>';
-}
-
-function viewRequestDetail(id){
-const r=db.reservation_requests.find(x=>x.id===id);
-if(!r)return;
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const tests=r.test_ids?r.test_ids.map(tid=>{const t=db.medical_tests.find(x=>x.id===tid);return t?t.name:tid;}).join(', '):'';
-const modal=`
-<div class="modal" style="display:block">
-<div class="modal-content" style="max-width:600px">
-<button class="close" onclick="closeRequestModal()">&times;</button>
-<h3 style="margin-top:0">Request #${r.id} Details</h3>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-<div><strong>Client Name:</strong> <span>${r.client_name||'—'}</span></div>
-<div><strong>Gender:</strong> <span>${r.client_gender||'—'}</span></div>
-<div><strong>Contact:</strong> <span>${r.client_contact||'—'}</span></div>
-<div><strong>Email:</strong> <span>${r.client_email||'—'}</span></div>
-<div><strong>Address:</strong> <span>${r.client_address||'—'}</span></div>
-<div><strong>DOB:</strong> <span>${r.client_dob||'—'}</span></div>
-</div>
-<p><strong>Hospital:</strong> ${h?h.name:'—'}</p>
-<p><strong>Visit Date:</strong> ${r.visit_date||'—'}</p>
-<p><strong>Visit Time:</strong> ${r.visit_time||'—'}</p>
-<p><strong>Tests:</strong> ${tests}</p>
-<p><strong>Notes:</strong> ${r.notes||'—'}</p>
-<p><strong>Status:</strong> <span class="status-badge status-${r.status}">${r.status}</span></p>
-<div style="margin-top:20px">
-<label>Update Status</label>
-<select id="statusUpdate" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:12px">
-<option value="pending" ${r.status==='pending'?'selected':''}>Pending</option>
-<option value="review" ${r.status==='review'?'selected':''}>Under Review</option>
-<option value="quoted" ${r.status==='quoted'?'selected':''}>Quotation Sent</option>
-<option value="accepted" ${r.status==='accepted'?'selected':''}>Accepted</option>
-<option value="confirmed" ${r.status==='confirmed'?'selected':''}>Confirmed</option>
-<option value="cancelled" ${r.status==='cancelled'?'selected':''}>Cancelled</option>
-</select>
-<button class="btn-admin" onclick="updateRequestStatus('${r.id}')">Update Status</button>
-<button class="btn-sm secondary" onclick="closeRequestModal()">Close</button>
-</div>
-</div>
-</div>
-`;
-document.body.insertAdjacentHTML('beforeend',modal);
-}
-
-function closeRequestModal(){
-const m=document.querySelector('.modal');
-if(m)m.remove();
-}
-
-function updateRequestStatus(id){
-const select=document.getElementById('statusUpdate');
-const r=db.reservation_requests.find(x=>x.id===id);
-if(r){r.status=select.value;saveDb(db);closeRequestModal();renderDashboard();if(document.getElementById('section-requests').style.display!=='none')renderRequestsTable();}
-}
-
-function renderQuotationsAdmin(){
-const cont=document.getElementById('quotationsList');
-const quotes=db.quotations||[];
-if(quotes.length===0){cont.innerHTML='<div class="empty-state"><p><b>No quotations yet.</b></p></div>';return;}
-cont.innerHTML='<table class="table"><thead><tr><th>Quote ID</th><th>Request</th><th>Client</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>'+quotes.map(q=>{
-const r=db.reservation_requests.find(x=>x.id===q.request_id);
-return `<tr><td><b>#${q.id}</b></td><td>#${q.request_id}</td><td>${q.client_id}</td><td>₱${q.total.toLocaleString()}</td><td><span class="status-badge status-${q.status}">${q.status}</span></td><td><button class="btn-sm primary" onclick="viewQuoteDetail('${q.id}')">View</button></td></tr>`;
-}).join('')+'</tbody></table>';
-}
-
-function viewQuoteDetail(qid){
-const q=db.quotations.find(x=>x.id===qid);
-if(!q)return;
-const r=db.reservation_requests.find(x=>x.id===q.request_id);
-const itemsHtml=q.items.map(it=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>${it.test_name}</span><span>₱${it.price.toLocaleString()}</span></div>`).join('');
-const modal=`
-<div class="modal" style="display:block">
-<div class="modal-content" style="max-width:520px">
-<button class="close" onclick="closeQuoteModal()">&times;</button>
-<h3 style="margin-top:0">Quotation #${q.id}</h3>
-<p><strong>Request:</strong> #${q.request_id}</p>
-<p><strong>Client:</strong> ${q.client_id}</p>
-<p><strong>Additional Fees:</strong> ₱${q.additional_fees||0}</p>
-<p><strong>Total:</strong> ₱${q.total.toLocaleString()}</p>
-<p><strong>Status:</strong> <span class="status-badge status-${q.status}">${q.status}</span></p>
-<p><strong>Admin Notes:</strong> ${q.admin_notes||'—'}</p>
-<div style="margin-top:12px">${itemsHtml}</div>
-<div style="margin-top:16px">
-<label>Admin Notes</label>
-<textarea id="quoteNotes" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px">${q.admin_notes||''}</textarea>
-<label style="margin-top:12px;display:block">Update Status</label>
-<select id="quoteStatus" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:12px">
-<option value="sent" ${q.status==='sent'?'selected':''}>Sent</option>
-<option value="accepted" ${q.status==='accepted'?'selected':''}>Accepted</option>
-<option value="declined" ${q.status==='declined'?'selected':''}>Declined</option>
-</select>
-<button class="btn-admin" onclick="updateQuoteStatus('${q.id}')">Save Changes</button>
-<button class="btn-sm secondary" onclick="closeQuoteModal()">Close</button>
-</div>
-</div>
-</div>
-`;
-document.body.insertAdjacentHTML('beforeend',modal);
-}
-
-function closeQuoteModal(){
-const m=document.querySelector('.modal');
-if(m)m.remove();
-}
-
-function updateQuoteStatus(qid){
-const q=db.quotations.find(x=>x.id===qid);
-const status=document.getElementById('quoteStatus').value;
-const notes=document.getElementById('quoteNotes').value;
-if(q){q.status=status;q.admin_notes=notes;saveDb(db);closeQuoteModal();if(document.getElementById('section-quotations').style.display!=='none')renderQuotationsAdmin();}
-}
-
-function renderVisitsAdmin(){
-const cont=document.getElementById('visitsList');
-const requests=db.reservation_requests||[];
-const confirmed=requests.filter(r=>r.status==='confirmed');
-if(confirmed.length===0){cont.innerHTML='<div class="empty-state"><p><b>No confirmed visits yet.</b></p></div>';return;}
-cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Hospital</th><th>Visit Date</th><th>Visit Time</th><th>Action</th></tr></thead><tbody>'+confirmed.map(r=>{
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${r.visit_time||'—'}</td><td><button class="btn-sm primary" onclick="viewRequestDetail('${r.id}')">View</button></td></tr>`;
-}).join('')+'</tbody></table>';
-}
-
 function logout(){
 localStorage.removeItem('isAdmin');
 localStorage.removeItem('adminUser');
-window.location.href='index.html';
+localStorage.removeItem('hp_user');
+window.location.href='admin-login.html';
+}
+let db = JSON.parse(localStorage.getItem('hp_db') || 'null');
+let currentUser=null;
+
+if(!db){
+  fetch('data.json').then(r=>r.json()).then(d=>{
+    localStorage.setItem('hp_db',JSON.stringify(d));
+    db=d;
+    initPage();
+  });
+} else {
+  initPage();
 }
 
-const themeBtn=document.getElementById('themeToggle');
-const root=document.documentElement;
-themeBtn.addEventListener('click',()=>{
-const isDark=root.getAttribute('data-theme')==='dark';
-root.setAttribute('data-theme',isDark?'light':'dark');
-localStorage.setItem('theme',isDark?'light':'dark');
-});
+function initPage(){
+  currentUser=requireAdmin();
+  if(!currentUser)return;
+  const root=document.documentElement;
+  const savedTheme=localStorage.getItem('theme')||'dark';
+  root.setAttribute('data-theme',savedTheme);
+  document.getElementById('navUser').textContent=currentUser.full_name+' · Admin';
+  document.getElementById('sidebarUser').textContent=currentUser.full_name+' · Admin';
+  db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+  renderDashboard();
+
+  document.getElementById('themeToggle').addEventListener('click',()=>{
+    const isDark=root.getAttribute('data-theme')==='dark';
+    root.setAttribute('data-theme',isDark?'light':'dark');
+    localStorage.setItem('theme',isDark?'light':'dark');
+  });
+}
+
+function closeAllModals(){document.querySelectorAll('.modal').forEach(m=>m.remove());}
+window.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeAllModals();});
+document.addEventListener('click',(e)=>{if(e.target&&e.target.classList&&e.target.classList.contains('modal'))closeAllModals();});
+
+function renderDashboard(){
+  const clients=safeArr(db.users).filter(u=>u.role==='client');
+  const requests=safeArr(db.reservation_requests);
+  document.getElementById('statClients').textContent=clients.length;
+  document.getElementById('statRequests').textContent=requests.length;
+  document.getElementById('statPending').textContent=requests.filter(r=>r.status==='pending').length;
+  document.getElementById('statQuoted').textContent=requests.filter(r=>r.status==='quoted').length;
+  document.getElementById('statConfirmed').textContent=requests.filter(r=>r.status==='confirmed').length;
+
+  const recent=[...requests].reverse().slice(0,5);
+  const cont=document.getElementById('recentRequests');
+  if(recent.length===0){cont.innerHTML='<div class="empty-state"><p><b>No requests yet.</b></p></div>';return;}
+  cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Hospital</th><th>Status</th><th>Action</th></tr></thead><tbody>'+recent.map(r=>{
+    const c=safeArr(db.users).find(u=>u.id===r.client_id);
+    const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+    return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||(c?c.full_name:'—')}</td><td>${h?h.name:'—'}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="viewRequestDetail('${r.id}')">Manage</button></td></tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+function showSection(section, el){
+  document.querySelectorAll('[id^="section-"]').forEach(s=>s.style.display='none');
+  const s=document.getElementById('section-'+section);if(s)s.style.display='block';
+  const titles={'requests':'Reservation Management','quotations':'Quotation Management','dashboard':'Admin Dashboard'};
+  const h1=document.querySelector('#pageHeader h1');if(h1)h1.textContent=titles[section]||'Admin Dashboard';
+  document.querySelectorAll('.nav-link').forEach(a=>a.classList.remove('active'));
+  if(el)el.classList.add('active');
+
+  if(section==='requests'){renderRequestsTable();}
+  else if(section==='quotations'){renderQuotationsAdmin();}
+}
+
+function renderRequestsTable(){
+  const cont=document.getElementById('adminRequestsTable');
+  const requests=safeArr(db.reservation_requests);
+  if(requests.length===0){cont.innerHTML='<div class="empty-state"><p><b>No reservation requests.</b></p></div>';return;}
+  cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Contact</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Status</th><th>Action</th></tr></thead><tbody>'+requests.map(r=>{
+    const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+    const testCount=r.test_ids?r.test_ids.length:0;
+    return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||'—'}</td><td>${r.client_contact||'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="window.location.href='admin-request-detail.html?id=${r.id}'">View Details</button></td></tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+function filterRequests(){
+  const q=document.getElementById('searchReq').value.toLowerCase();
+  const s=document.getElementById('statusFilter').value;
+  const requests=safeArr(db.reservation_requests);
+  const filtered=requests.filter(r=>{
+    const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+    const match=(!q||r.id.toLowerCase().includes(q)||(r.client_name&&r.client_name.toLowerCase().includes(q))||(h&&h.name.toLowerCase().includes(q)));
+    const statusMatch=!s||r.status===s;
+    return match&&statusMatch;
+  });
+  const cont=document.getElementById('adminRequestsTable');
+  if(filtered.length===0){cont.innerHTML='<div class="empty-state"><p><b>No matching requests.</b></p></div>';return;}
+  cont.innerHTML='<table class="table"><thead><tr><th>Request ID</th><th>Client Name</th><th>Contact</th><th>Hospital</th><th>Visit Date</th><th>Tests</th><th>Status</th><th>Action</th></tr></thead><tbody>'+filtered.map(r=>{
+    const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+    const testCount=r.test_ids?r.test_ids.length:0;
+    return `<tr><td><b>#${r.id}</b></td><td>${r.client_name||'—'}</td><td>${r.client_contact||'—'}</td><td>${h?h.name:'—'}</td><td>${r.visit_date||'—'}</td><td>${testCount}</td><td><span class="status-badge status-${r.status}">${r.status}</span></td><td><button class="btn-sm primary" onclick="window.location.href='admin-request-detail.html?id=${r.id}'">View Details</button></td></tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+function viewRequestDetail(id){
+  // Redirect to the full detail page instead of opening a modal
+  window.location.href='admin-request-detail.html?id='+id;
+}
+
+function renderQuotationsAdmin(){
+  const cont=document.getElementById('quotationsList');
+  const quotes=safeArr(db.quotations);
+  if(quotes.length===0){cont.innerHTML='<div class="empty-state"><p><b>No quotations yet.</b></p></div>';return;}
+  cont.innerHTML='<table class="table"><thead><tr><th>Quote ID</th><th>Request</th><th>Client</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>'+quotes.map(q=>{
+    const r=safeArr(db.reservation_requests).find(x=>x.id===q.request_id);
+    return `<tr><td><b>#${q.id}</b></td><td>#${q.request_id}</td><td>${q.client_id}</td><td>₱${q.total.toLocaleString()}</td><td><span class="status-badge status-${q.status}">${q.status}</span></td><td><button class="btn-sm primary" onclick="window.location.href='admin-request-detail.html?id=${q.request_id}'">View</button></td></tr>`;
+  }).join('')+'</tbody></table>';
+}
 </script>
 </body>
 </html>

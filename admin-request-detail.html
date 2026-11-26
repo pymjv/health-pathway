@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="styles.css">
 <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
-.detail-layout{display:grid;grid-template-columns:1fr 360px;gap:30px}
+.detail-layout{display:grid;grid-template-columns:1fr 360px;gap:30px;padding:40px;max-width:1200px;margin:0 auto}
 .card-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px}
 .card-section h3{font-size:1.25rem;font-weight:700;margin:0 0 16px 0;color:var(--text)}
 .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
@@ -19,20 +19,17 @@
 .price-table th, .price-table td{padding:12px;border-bottom:1px solid var(--border);text-align:left}
 .price-table th{color:var(--text-soft);font-weight:600;text-transform:uppercase;font-size:0.75rem}
 .price-input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;background:var(--card)}
-.price-type{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;background:var(--card);font-size:0.85rem}
-.btn-send{background:var(--primary);color:#fff;width:100%;padding:14px;border-radius:12px;font-weight:800;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 12px -4px rgba(14,165,164,0.35);margin-top:12px}
-.btn-send:hover{background:var(--primary-hover)}
+.btn-send{background:var(--primary);color:#0b1320;width:100%;padding:14px;border-radius:12px;font-weight:800;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 12px -4px rgba(34,211,238,0.35);margin-top:12px;transition:all 0.2s}
+.btn-send:hover{background:var(--primary-hover);color:#fff}
 .btn-sm{padding:6px 12px;border-radius:8px;font-size:0.85rem;border:none;cursor:pointer;font-weight:600}
-.btn-sm.primary{background:var(--primary);color:#fff}
+.btn-sm.primary{background:var(--primary);color:#0b1320}
 .btn-sm.secondary{background:transparent;color:var(--primary);border:1px solid var(--primary)}
 .btn-sm.outline{background:transparent;color:var(--text-soft);border:1px solid var(--border)}
 .btn-sm.danger{background:#fee2e2;color:#dc2626}
 .total-box{background:var(--primary-soft);border-radius:12px;padding:20px;margin-top:16px}
 .total-box .total-label{font-size:0.85rem;color:var(--dark)}
 .total-box .total-value{font-size:2rem;font-weight:800;color:var(--dark)}
-.notes-area{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text);resize:vertical;min-height:80px}
-.empty-state{text-align:center;padding:48px 24px;color:var(--messed)}
-.empty-state b{color:var(--text)}
+.notes-area{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text);resize:vertical;min-height:80px;margin-bottom:12px}
 .sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);position:sticky;top:20px}
 .sidebar-card h4{font-size:1rem;font-weight:700;margin:0 0 16px 0;color:var(--text)}
 .status-select{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:var(--card);color:var(--text);font-size:0.9rem}
@@ -41,7 +38,7 @@
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='admin-dashboard.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -77,22 +74,18 @@
 </div>
 
 <h3 style="margin-top:28px">Price Management</h3>
-<p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px">Set prices for each requested test. Mark as estimated or unavailable. Add additional fees if applicable.</p>
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px">Set prices for each requested test. The system will auto-fill standard hospital prices if available.</p>
 <table class="price-table">
 <thead>
-<tr><th>Medical Test</th><th>Price (₱)</th><th>Price Type</th><th>Action</th></tr>
+<tr><th>Medical Test</th><th>Price (₱)</th></tr>
 </thead>
 <tbody id="priceTableBody"></tbody>
 </table>
-<div style="display:flex;gap:10px;margin-bottom:16px">
-<input type="number" id="feeInput" placeholder="Additional fees (₱)" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font:inherit">
-<button class="btn-sm primary" onclick="addAdditionalFee()">Add Fee</button>
-</div>
 <div class="total-box">
 <div class="total-label">Total Estimated Expenses</div>
 <div class="total-value" id="totalEstimate">₱0.00</div>
 </div>
-<textarea id="adminNotes" class="notes-area" placeholder="Admin notes for the client (optional)..."></textarea>
+<textarea id="adminNotes" class="notes-area" placeholder="Admin notes for the client (optional)..." style="margin-top:16px"></textarea>
 <button class="btn-send" onclick="sendQuotation()">SEND QUOTATION TO CLIENT</button>
 </div>
 </div>
@@ -115,159 +108,200 @@
 </div>
 
 <script>
-let db=JSON.parse(localStorage.getItem('hp_db'));
-if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
+function newId(p){return (crypto.randomUUID? p+'-'+crypto.randomUUID() : p+'-'+Date.now()+'-'+Math.floor(Math.random()*1e6));}
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
+function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
+function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));}
+function requireAdmin(){
+const u=localStorage.getItem('hp_user');
+if(!u){window.location.href='admin-login.html';return null;}
+try{const cu=JSON.parse(u);if(cu.role!=='admin'){window.location.href='admin-login.html';return null;}}catch(e){window.location.href='admin-login.html';return null;}
+return JSON.parse(u);
+}
+
+let db = JSON.parse(localStorage.getItem('hp_db') || 'null');
 let currentUser=null;
 let currentRequestId=null;
 let priceOverrides={};
-let additionalFees=0;
 
-function initPage(){
-const u=localStorage.getItem('hp_user');
-if(!u){window.location.href='admin-login.html';return;}
-currentUser=JSON.parse(u);
-if(currentUser.role!=='admin'){window.location.href='admin-login.html';return;}
-const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
-root.setAttribute('data-theme',savedTheme);
-document.getElementById('navUser').textContent=currentUser.full_name+' (Admin)';
-const params=new URLSearchParams(window.location.search);
-currentRequestId=params.get('id');
-if(!currentRequestId){document.getElementById('notFound').style.display='block';return;}
-db=JSON.parse(localStorage.getItem('hp_db')||'{}');
-loadRequest();
+if(!db){
+  fetch('data.json').then(r=>r.json()).then(d=>{
+    localStorage.setItem('hp_db',JSON.stringify(d));
+    db=d;
+    initPage();
+  });
+} else {
+  initPage();
 }
 
-function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
-function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+function initPage(){
+  currentUser=requireAdmin();
+  if(!currentUser)return;
+  const root=document.documentElement;
+  const savedTheme=localStorage.getItem('theme')||'dark';
+  root.setAttribute('data-theme',savedTheme);
+  document.getElementById('navUser').textContent=currentUser.full_name+' (Admin)';
+  
+  const params=new URLSearchParams(window.location.search);
+  currentRequestId=params.get('id');
+  if(!currentRequestId){document.getElementById('notFound').style.display='block';return;}
+  
+  db=JSON.parse(localStorage.getItem('hp_db')||'{}');
+  loadRequest();
+
+  document.getElementById('themeToggle').addEventListener('click',()=>{
+    const isDark=root.getAttribute('data-theme')==='dark';
+    root.setAttribute('data-theme',isDark?'light':'dark');
+    localStorage.setItem('theme',isDark?'light':'dark');
+  });
+}
 
 function loadRequest(){
-const r=db.reservation_requests.find(x=>x.id===currentRequestId);
-if(!r){document.getElementById('notFound').style.display='block';return;}
-document.getElementById('requestContent').style.display='block';
-const c=db.users.find(u=>u.id===r.client_id);
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const d=db.diseases.find(d=>d.id===r.disease_id);
-document.getElementById('dClientName').textContent=c?c.full_name:'—';
-document.getElementById('dClientContact').textContent=c?c.phone||'—':'—';
-document.getElementById('dClientEmail').textContent=c?c.email:'—';
-document.getElementById('dRequestId').textContent=r.id;
-document.getElementById('dHospital').textContent=h?h.name:'—';
-document.getElementById('dVisitDate').textContent=r.visit_date||'—';
-document.getElementById('dVisitTime').textContent=r.visit_time||'—';
-document.getElementById('dDisease').textContent=d?d.name:'Not specified';
-document.getElementById('dNotes').textContent=r.notes||'—';
-document.getElementById('dSubmitted').textContent=r.created_at;
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r){document.getElementById('notFound').style.display='block';return;}
+  
+  document.getElementById('requestContent').style.display='block';
+  const c=safeArr(db.users).find(u=>u.id===r.client_id);
+  const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+  const d=safeArr(db.diseases).find(d=>d.id===r.disease_id);
+  
+  document.getElementById('dClientName').textContent=c?c.full_name:(r.client_name||'—');
+  document.getElementById('dClientContact').textContent=c?(c.phone||'—'):(r.client_contact||'—');
+  document.getElementById('dClientEmail').textContent=c?c.email:(r.client_email||'—');
+  document.getElementById('dRequestId').textContent=r.id;
+  document.getElementById('dHospital').textContent=h?h.name:'—';
+  document.getElementById('dVisitDate').textContent=r.visit_date||'—';
+  document.getElementById('dVisitTime').textContent=r.visit_time||'—';
+  document.getElementById('dDisease').textContent=d?d.name:'Not specified';
+  document.getElementById('dNotes').textContent=r.notes||'—';
+  document.getElementById('dSubmitted').textContent=r.created_at;
 
-const statusSel=document.getElementById('dStatus');
-statusSel.innerHTML=['pending','review','quoted','accepted','confirmed','cancelled'].map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${s}</option>`).join('');
-document.getElementById('qStatus').textContent=r.status;
+  const statusSel=document.getElementById('dStatus');
+  statusSel.innerHTML=['pending','review','quoted','accepted','confirmed','cancelled'].map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${s}</option>`).join('');
+  document.getElementById('qStatus').textContent=r.status;
 
-renderPriceTable(r);
-updateTotal();
+  renderPriceTable(r);
+  updateTotal();
 }
 
 function renderPriceTable(r){
-const cont=document.getElementById('priceTableBody');
-const testIds=r.test_ids||[];
-if(testIds.length===0){cont.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">No tests selected.</td></tr>';return;}
-const q=db.quotations.find(q=>q.request_id===currentRequestId);
-cont.innerHTML=testIds.map(tid=>{
-const t=db.medical_tests.find(t=>t.id===tid);
-const price=getPrice(tid,q);
-const priceType=getPriceType(tid,q);
-const existing=q?q.items.find(it=>it.test_id===tid):null;
-return `<tr>
-<td>${t?t.name:'—'}</td>
-<td><input type="number" class="price-input" value="${price!==null?price:''}" onchange="updatePrice('${tid}',this.value)"></td>
-<td><select class="price-type" onchange="updatePriceType('${tid}',this.value)"><option value="standard" ${priceType==='standard'?'selected':''}>Standard</option><option value="estimated" ${priceType==='estimated'?'selected':''}>Estimated</option><option value="unavailable" ${priceType==='unavailable'?'selected':''}>Unavailable</option></select></td>
-<td><button class="btn-sm danger" onclick="removeTest('${tid}')">Remove</button></td>
-</tr>`;
-}).join('');
-document.getElementById('qTestCount').textContent=testIds.length;
+  const cont=document.getElementById('priceTableBody');
+  const testIds=r.test_ids||[];
+  if(testIds.length===0){cont.innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:24px">No tests selected.</td></tr>';return;}
+  
+  const q=safeArr(db.quotations).find(q=>q.request_id===currentRequestId);
+  const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+  const hospitalPrices = h ? safeObj(db.hospital_test_prices)[h.id] || {} : {};
+
+  cont.innerHTML=testIds.map(tid=>{
+    const t=safeArr(db.medical_tests).find(t=>t.id===tid);
+    
+    // Try to get price from Quotation, then Admin Override, then Base Hospital Price
+    let price = '';
+    if(q){ const it = safeArr(q.items).find(i=>i.test_id===tid); if(it) price = it.price; }
+    if(price === '' && priceOverrides[tid] !== undefined) { price = priceOverrides[tid]; }
+    if(price === '' && hospitalPrices[tid] !== undefined) { price = hospitalPrices[tid]; }
+    
+    return `<tr>
+      <td>${t?t.name:'—'}</td>
+      <td><input type="number" class="price-input" value="${price}" onchange="updatePrice('${tid}',this.value)" placeholder="Enter price"></td>
+    </tr>`;
+  }).join('');
+  
+  document.getElementById('qTestCount').textContent=testIds.length;
 }
 
-function getPrice(tid,q){
-if(q){const it=q.items.find(i=>i.test_id===tid);if(it)return it.price;}
-const p=priceOverrides[tid];
-if(p!==undefined)return p;
-const h=db.reservation_requests.find(r=>r.id===currentRequestId).hospital_id;
-const prices=db.hospital_test_prices[h];
-return prices?prices[tid]:null;
-}
-function getPriceType(tid,q){
-if(q){const it=q.items.find(i=>i.test_id===tid);if(it)return it.price_type||'standard';}
-return priceOverrides[tid]&&priceOverrides[tid].type?priceOverrides[tid].type:'standard';
-}
 function updatePrice(tid,val){
-priceOverrides[tid]={price:parseFloat(val)||0,type:getPriceType(tid,null)};
-updateTotal();
+  priceOverrides[tid] = parseFloat(val) || 0;
+  updateTotal();
 }
-function updatePriceType(tid,val){
-if(!priceOverrides[tid])priceOverrides[tid]={price:getPrice(tid,null)||0,type:val};
-else priceOverrides[tid].type=val;
-updateTotal();
-}
-function removeTest(tid){
-delete priceOverrides[tid];
-const r=db.reservation_requests.find(x=>x.id===currentRequestId);
-r.test_ids=r.test_ids.filter(t=>t!==tid);
-saveDb(db);
-renderPriceTable(r);
-updateTotal();
-}
-function addAdditionalFee(){
-const val=parseFloat(document.getElementById('feeInput').value);
-if(!isNaN(val)){additionalFees=val;document.getElementById('feeInput').value='';updateTotal();}
-}
+
 function updateTotal(){
-let total=0;
-const r=db.reservation_requests.find(x=>x.id===currentRequestId);
-const testIds=r.test_ids||[];
-testIds.forEach(tid=>{
-const p=getPrice(tid,null);
-if(p!==null)total+=p;
-});
-total+=additionalFees;
-document.getElementById('totalEstimate').textContent='₱'+total.toLocaleString();
+  let total=0;
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r)return;
+  
+  const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+  const hospitalPrices = h ? safeObj(db.hospital_test_prices)[h.id] || {} : {};
+  const testIds=r.test_ids||[];
+  
+  testIds.forEach(tid=>{
+    let p = null;
+    if(priceOverrides[tid] !== undefined) p = priceOverrides[tid];
+    else if(hospitalPrices[tid] !== undefined) p = hospitalPrices[tid];
+    if(p !== null) total += p;
+  });
+  
+  document.getElementById('totalEstimate').textContent='₱'+total.toLocaleString();
 }
+
 function updateStatus(){
-const r=db.reservation_requests.find(x=>x.id===currentRequestId);
-r.status=document.getElementById('dStatus').value;
-saveDb(db);
-document.getElementById('qStatus').textContent=r.status;
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r)return;
+  r.status=document.getElementById('dStatus').value;
+  saveDb(db);
+  document.getElementById('qStatus').textContent=r.status;
 }
-function markReview(){const r=db.reservation_requests.find(x=>x.id===currentRequestId);r.status='review';saveDb(db);document.getElementById('dStatus').value='review';document.getElementById('qStatus').textContent='review';}
-function markPending(){const r=db.reservation_requests.find(x=>x.id===currentRequestId);r.status='pending';saveDb(db);document.getElementById('dStatus').value='pending';document.getElementById('qStatus').textContent='pending';}
+
+function markReview(){
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r)return;
+  r.status='review';saveDb(db);
+  document.getElementById('dStatus').value='review';
+  document.getElementById('qStatus').textContent='review';
+}
+
+function markPending(){
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r)return;
+  r.status='pending';saveDb(db);
+  document.getElementById('dStatus').value='pending';
+  document.getElementById('qStatus').textContent='pending';
+}
+
 function sendQuotation(){
-const r=db.reservation_requests.find(x=>x.id===currentRequestId);
-const testIds=r.test_ids||[];
-const items=testIds.map(tid=>{
-const t=db.medical_tests.find(t=>t.id===tid);
-const price=getPrice(tid,null);
-const type=getPriceType(tid,null);
-return {test_id:tid,test_name:t?t.name:'—',price:price!==null?price:0,price_type:type||'standard'};
-});
-const total=items.reduce((s,it)=>s+(it.price||0),0)+additionalFees;
-const quotation={
-id:'Q-'+Date.now(),
-request_id:currentRequestId,
-client_id:r.client_id,
-items:items,
-total:total,
-additional_fees:additionalFees,
-admin_notes:document.getElementById('adminNotes').value||'',
-status:'sent',
-created_at:new Date().toISOString()
-};
-db.quotations.push(quotation);
-r.status='quoted';
-saveDb(db);
-db.notifications.push({id:'n-'+Date.now(),user_id:r.client_id,message:'Quotation #'+quotation.id+' sent for request #'+currentRequestId,read:false,created_at:new Date().toISOString()});
-db.notifications.push({id:'n-'+Date.now(),user_id:'admin-001',message:'Quotation #'+quotation.id+' sent to client.',read:false,created_at:new Date().toISOString()});
-saveDb(db);
-alert('Quotation sent to client. Status updated to Quotation Sent.');
-window.location.href='admin-requests.html';
+  const r=safeArr(db.reservation_requests).find(x=>x.id===currentRequestId);
+  if(!r)return;
+  
+  const testIds=r.test_ids||[];
+  const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+  const hospitalPrices = h ? safeObj(db.hospital_test_prices)[h.id] || {} : {};
+  
+  const items=testIds.map(tid=>{
+    const t=safeArr(db.medical_tests).find(t=>t.id===tid);
+    let p = 0;
+    if(priceOverrides[tid] !== undefined) p = priceOverrides[tid];
+    else if(hospitalPrices[tid] !== undefined) p = hospitalPrices[tid];
+    return {test_id:tid, test_name:t?t.name:'—', price:p, price_type:'standard'};
+  });
+  
+  const total=items.reduce((s,it)=>s+(it.price||0),0);
+  
+  const quotation={
+    id:newId('Q'),
+    request_id:currentRequestId,
+    client_id:r.client_id,
+    items:items,
+    total:total,
+    additional_fees:0,
+    admin_notes:document.getElementById('adminNotes').value||'',
+    status:'sent',
+    created_at:new Date().toISOString()
+  };
+  
+  db.quotations = safeArr(db.quotations);
+  db.quotations.push(quotation);
+  r.status='quoted';
+  
+  db.notifications = safeArr(db.notifications);
+  db.notifications.push({id:newId('n'), user_id:r.client_id, message:'Quotation sent for request #'+currentRequestId, read:false, created_at:new Date().toISOString()});
+  
+  saveDb(db);
+  alert('Quotation sent to client! Status updated to Quoted.');
+  window.location.href='admin-requests.html';
 }
+
 function goBack(){window.location.href='admin-requests.html';}
 </script>
 </body>

@@ -26,14 +26,14 @@
 .instructions{background:var(--border);border-radius:10px;padding:16px;font-size:0.9rem;color:var(--text-soft)}
 .print-btn{background:var(--primary);color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
 .print-btn:hover{background:var(--primary-hover)}
-.empty-state{text-align:center;padding:48px 24px;color:var(--misted)}
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
 .empty-state b{color:var(--text)}
 @media (max-width:640px){.visit-info{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="site-header">
-<div class="logo" aria-label="Health Pathway">
+<div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer" aria-label="Health Pathway">
 <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="6" y="6" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
 <path d="M16 8v6m0 0 4-4m-4 4-4-4M16 14v6m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -50,14 +50,17 @@
 
 <main style="padding:40px">
 <h1 style="font-size:2rem;font-weight:800;margin:0 0 8px 0;letter-spacing:-0.5px">My Visit</h1>
-<p style="color:var(--misted);margin:0 0 32px 0">Your confirmed hospital visit details and document checklist.</p>
+<p style="color:var(--muted);margin:0 0 32px 0">Your confirmed hospital visit details and document checklist.</p>
 <div id="visitContainer" class="empty-state"><p><b>No confirmed visit yet.</b> Once an admin confirms your reservation, it will appear here.</p></div>
 </main>
 
 <script>
+function safeArr(x){return Array.isArray(x)?x:[];}
+function safeObj(x){return (x&&typeof x==='object'&&!Array.isArray(x))?x:{};}
 let db=JSON.parse(localStorage.getItem('hp_db'));
 if(!db){fetch('data.json').then(r=>r.json()).then(d=>{localStorage.setItem('hp_db',JSON.stringify(d));db=d;initPage();});}else{initPage();}
 let currentUser=null;
+
 function initPage(){
 const root=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark';
 root.setAttribute('data-theme',savedTheme);
@@ -70,17 +73,26 @@ currentUser={id:clientId,full_name:'Guest Client',email:'',role:'client'};
 document.getElementById('navUser').textContent='Client ('+clientId+')';
 db=JSON.parse(localStorage.getItem('hp_db')||'{}');
 renderVisit();
+
+// Fix theme toggle
+document.getElementById('themeToggle').addEventListener('click',()=>{
+const isDark=root.getAttribute('data-theme')==='dark';
+root.setAttribute('data-theme',isDark?'light':'dark');
+localStorage.setItem('theme',isDark?'light':'dark');
+});
 }
+
 function getDb(){return JSON.parse(localStorage.getItem('hp_db')||'{}');}
 function saveDb(d){localStorage.setItem('hp_db',JSON.stringify(d));db=d;}
+
 function renderVisit(){
 const cont=document.getElementById('visitContainer');
-const confirmed=db.reservation_requests.filter(r=>r.client_id===currentUser.id&&r.status==='confirmed');
+const confirmed=safeArr(db.reservation_requests).filter(r=>r.client_id===currentUser.id&&r.status==='confirmed');
 if(confirmed.length===0){cont.innerHTML='<div class="empty-state"><p><b>No confirmed visit yet.</b> Once an admin confirms your reservation, it will appear here.</p></div>';return;}
 const r=confirmed[0];
-const h=db.hospitals.find(h=>h.id===r.hospital_id);
-const q=db.quotations.find(q=>q.request_id===r.id);
-const vc=db.visit_checklists.find(c=>c.client_id===currentUser.id);
+const h=safeArr(db.hospitals).find(h=>h.id===r.hospital_id);
+const q=safeArr(db.quotations).find(q=>q.request_id===r.id);
+const vc=safeArr(db.visit_checklists).find(c=>c.client_id===currentUser.id);
 const itemsHtml=(q?q.items:[]).map(it=>`<div class="test-item"><span class="test-name">${it.test_name}</span><span class="test-price">₱${it.price.toLocaleString()}</span></div>`).join('');
 let done=0;
 const checklistItems=["Valid ID","Doctor's request","Medical records","Previous lab results","Prescription/referral","PhilHealth info","Other documents"];
@@ -105,20 +117,21 @@ cont.innerHTML=`
 ${q?`<div style="margin-top:16px"><div class="quote-row" style="display:flex;justify-content:space-between"><span>Additional Fees</span><span>₱${q.additional_fees||0}</span></div><div class="quote-row" style="display:flex;justify-content:space-between;border-top:2px solid var(--border);margin-top:8px;padding-top:8px"><span>Estimated Total</span><span style="font-weight:800;color:var(--primary)">₱${q.total.toLocaleString()}</span></div></div>`:''}
 <h3 style="margin-top:24px">Reservation Status</h3>
 <span class="status-badge status-confirmed">Confirmed</span>
-${r.admin_notes?`<div class="instructions" style="margin-top:12px"><b>Admin Instructions:</b> ${r.admin_notes}</div>`:''}
+${q && q.admin_notes?`<div class="instructions" style="margin-top:12px"><b>Admin Instructions:</b> ${q.admin_notes}</div>`:''}
 </div>
 <div class="visit-card">
 <h3>Document Checklist</h3>
-<p style="color:var(--misted);font-size:0.9rem;margin-bottom:16px">Mark documents as prepared for your visit.</p>
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">Mark documents as prepared for your visit.</p>
 <div id="checklistContainer">${clHtml}</div>
-<div style="margin-top:12px;font-size:0.85rem;color:var(--misted)">${Math.round(done/checklistItems.length*100)}% Complete</div>
+<div style="margin-top:12px;font-size:0.85rem;color:var(--muted)">${Math.round(done/checklistItems.length*100)}% Complete</div>
 <button class="print-btn" onclick="window.print()">Print / Save Visit Summary</button>
 </div>
 `;
 }
 function toggleChecklist(idx){
-const vc=db.visit_checklists.find(c=>c.client_id===currentUser.id);
-if(!vc){vc={client_id:currentUser.id,items:{},updated_at:new Date().toISOString()};db.visit_checklists.push(vc);}
+const vcl=safeArr(db.visit_checklists);
+let vc=vcl.find(c=>c.client_id===currentUser.id);
+if(!vc){vc={client_id:currentUser.id,items:{},updated_at:new Date().toISOString()};vcl.push(vc);db.visit_checklists=vcl;}
 vc.items[idx]=!vc.items[idx];
 vc.updated_at=new Date().toISOString();
 saveDb(db);
